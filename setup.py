@@ -31,6 +31,7 @@ setup(name='yafowil.widget.image',
       install_requires=[
           'setuptools',
           'yafowil',
+          'ImageUtils',
       ],
       tests_require=tests_require,
       extras_require = dict(

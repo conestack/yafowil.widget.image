@@ -1,0 +1,10 @@
+*.pyc
+*.pyo
+.installed.cfg
+.mr.developer.cfg
+bin/
+develop-eggs/
+devsrc/
+eggs/
+parts/
+src/yafowil.widget.image.egg-info/
