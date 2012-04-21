@@ -6,7 +6,6 @@ from yafowil.base import (
 )
 from yafowil.utils import (
     cssid,
-    cssclasses,
     css_managed_props,
     managedprops,
 )
