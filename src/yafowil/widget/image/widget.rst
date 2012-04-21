@@ -13,14 +13,14 @@ Empty image::
     ...     'form',
     ...     name='myform',
     ...     props={'action': 'myaction'})
-    >>> form['image'] = factory('image', 'myimage')
+    >>> form['image'] = factory('image')
     >>> pxml(form())
     <form action="myaction" enctype="multipart/form-data" id="form-myform" method="post" novalidate="novalidate">
       <input accept="image/*" class="image" id="input-myform-image" name="myform.image" type="file"/>
     </form>
     <BLANKLINE>
 
-Image with value::
+Image with value. Default file action keep is checked::
 
     >>> image_path = pkg_resources.resource_filename(
     ...     'yafowil.widget.image', 'testing/dummy.png')
@@ -34,7 +34,7 @@ Image with value::
     >>> value
     '\x89PNG\r\n...\x00IEND\xaeB`\x82'
     
-    >>> form['image'] = factory('image', 'myimage', value=value)
+    >>> form['image'] = factory('image', value=value)
     >>> pxml(form())
     <form action="myaction" enctype="multipart/form-data" id="form-myform" method="post" novalidate="novalidate">
       <input accept="image/*" class="image" id="input-myform-image" name="myform.image" type="file"/>
@@ -52,16 +52,45 @@ Image with value::
       </div>
     </form>
     <BLANKLINE>
+
+Extract ``keep`` returns original value::
     
     >>> request = {
+    ...     'myform.image': '123',
+    ...     'myform.image-action': 'keep'
     ... }
     >>> data = form.extract(request)    
     >>> data.printtree()
-    <RuntimeData myform, value=<UNSET>, extracted=odict([('image', <UNSET>)]) at ...>
-      <RuntimeData myform.image, value='\x89PNG\r\n...\x00IEND\xaeB`\x82', extracted=<UNSET> at ...>
-    
-    >>> pxml(form(data=data))
+    <RuntimeData myform, value=<UNSET>, extracted=odict([('image', '\x89PNG\r\n\...\x00IEND\xaeB`\x82')]) at ...>
+      <RuntimeData myform.image, value='\x89PNG\r\n\...\x00IEND\xaeB`\x82', extracted='\x89PNG\r\n\...\x00IEND\xaeB`\x82' at ...>
+
+Extract ``replace`` returns new value::
+
+    >>> request['myform.image-action'] = 'replace'
+    >>> data = form.extract(request)
+    >>> data.extracted
+    odict([('image', '123')])
+
+Extract ``delete`` returns UNSET::
+
+    >>> request['myform.image-action'] = 'delete'
+    >>> data = form.extract(request)
+    >>> data.extracted
+    odict([('image', <UNSET>)])
+
+If file URL of existing image is known, ``src`` property can be set do display
+image above controls::
+
+    >>> form['image'] = factory(
+    ...     'image',
+    ...     value=value,
+    ...     props={
+    ...         'src': 'http://www.example.com/someimage.png',
+    ...         'alt': 'Alternative text',
+    ...     })
+    >>> pxml(form())
     <form action="myaction" enctype="multipart/form-data" id="form-myform" method="post" novalidate="novalidate">
+      <img alt="Alternative text" class="image-preview" id="image-preview-myform-image" src="http://www.example.com/someimage.png"/>
       <input accept="image/*" class="image" id="input-myform-image" name="myform.image" type="file"/>
       <div id="radio-myform-image-keep">
         <input checked="checked" class="image" id="input-myform-image-keep" name="myform.image-action" type="radio" value="keep"/>
@@ -77,22 +106,3 @@ Image with value::
       </div>
     </form>
     <BLANKLINE>
-    
-    >>> request = {
-    ...     'myform.image': '123',
-    ...     'myform.image-action': 'keep'
-    ... }
-    >>> data = form.extract(request)    
-    >>> data.printtree()
-    <RuntimeData myform, value=<UNSET>, extracted=odict([('image', '\x89PNG\r\n\...\x00IEND\xaeB`\x82')]) at ...>
-      <RuntimeData myform.image, value='\x89PNG\r\n\...\x00IEND\xaeB`\x82', extracted='\x89PNG\r\n\...\x00IEND\xaeB`\x82' at ...>
-    
-    >>> request['myform.image-action'] = 'replace'
-    >>> data = form.extract(request)
-    >>> data.extracted
-    odict([('image', '123')])
-    
-    >>> request['myform.image-action'] = 'delete'
-    >>> data = form.extract(request)
-    >>> data.extracted
-    odict([('image', <UNSET>)])

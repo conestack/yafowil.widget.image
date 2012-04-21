@@ -26,6 +26,8 @@ def image_edit_renderer(widget, data):
     img_attrs = {
         'src': widget.attrs['src'],
         'alt': widget.attrs['alt'],
+        'id': cssid(widget, 'image-preview'),
+        'class': 'image-preview',
     }
     img = tag('img', **img_attrs)
     return img + data.rendered
@@ -50,7 +52,7 @@ factory.register(
     'image',
     extractors=[image_extractor, file_extractor, generic_required_extractor],
     edit_renderers=[
-        image_edit_renderer, input_file_edit_renderer, file_options_renderer],
+        input_file_edit_renderer, file_options_renderer, image_edit_renderer],
     display_renderers=[image_display_renderer])
 
 factory.doc['blueprint']['image'] = \
