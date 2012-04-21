@@ -20,13 +20,14 @@ from yafowil.common import (
 
 @managedprops('image', *css_managed_props)
 def image_edit_renderer(widget, data):
-    if widget.attrs['url']:
-        tag = data.tag
-        img_attrs = {
-            'src': widget.attrs['src'],
-            'alt': widget.attrs['alt'],
-        }
-        img = tag('img', **img_attrs)
+    if not widget.attrs['src']:
+        return data.rendered
+    tag = data.tag
+    img_attrs = {
+        'src': widget.attrs['src'],
+        'alt': widget.attrs['alt'],
+    }
+    img = tag('img', **img_attrs)
     return img + data.rendered
 
 
@@ -35,7 +36,7 @@ def image_extractor(widget, data):
 
 
 def image_display_renderer(widget, data):
-    if widget.attrs['url']:
+    if widget.attrs['src']:
         tag = data.tag
         img_attrs = {
             'src': widget.attrs['src'],
