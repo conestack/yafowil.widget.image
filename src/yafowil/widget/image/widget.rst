@@ -19,11 +19,11 @@ Provide testing dummy files::
     
     >>> dummy_png = dummy_file_data('dummy.png')
     >>> dummy_png
-    '\x89PNG\r\n...\x00IEND\xaeB`\x82'
+    "\x89PNG\r\n...\x00IEND\xaeB`\x82"
     
     >>> dummy_jpg = dummy_file_data('dummy.jpg')
     >>> dummy_jpg
-    '\xff\xd8\xff\xe0\x00\x10JFIF\...?\xff\xd9'
+    '\xff\xd8\xff\xe0\x00\x10JFIF\...\xff\xd9'
     
     >>> dummy_pdf = dummy_file_data('dummy.pdf')
     >>> dummy_pdf
@@ -107,7 +107,7 @@ Extract ``keep`` returns original value::
     []
 
     >>> data['image'].extracted['file'].read()
-    '\x89PNG\r\n\...\x00IEND\xaeB`\x82'
+    "\x89PNG\r\n\...\x00IEND\xaeB`\x82"
 
 Extract ``replace`` returns new value::
 
@@ -126,7 +126,7 @@ Extract ``replace`` returns new value::
     'file': <StringIO.StringIO instance at ...>}
     
     >>> data['image'].extracted['file'].read()
-    '\xff\xd8\xff\xe0\x00\x10JFIF\...?\xff\xd9'
+    '\xff\xd8\xff\xe0\x00\x10JFIF\...\xff\xd9'
     
     >>> data['image'].errors
     []
@@ -227,7 +227,7 @@ Size extraction::
     
     >>> buffer.seek(0)
     >>> buffer.read()
-    '\x89PNG\r\n...\x00IEND\xaeB`\x82'
+    "\x89PNG\r\n...\x00IEND\xaeB`\x82"
     
     >>> image.size
     (50, 50)
@@ -396,3 +396,35 @@ Exact DPI::
     >>> data = form.extract(request)
     >>> data['image'].errors
     []
+
+Scales::
+
+    >>> form['image'] = factory(
+    ...     'image',
+    ...     props={
+    ...         'scales': {
+    ...             'micro': (20, 20),
+    ...             'ratio': (70, 40),
+    ...         },
+    ...     }
+    ... )
+    >>> request = {
+    ...     'myform.image': {
+    ...         'file': StringIO(dummy_png),
+    ...         'mimetype': 'image/png',
+    ...     },
+    ... }
+    >>> data = form.extract(request)
+    >>> extracted = data['image'].extracted
+    >>> extracted
+    {'mimetype': 'image/png', 
+    'action': 'new', 
+    'image': <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>, 
+    'file': <StringIO.StringIO instance at ...>, 
+    'scales': {'micro': <PIL.Image.Image image mode=RGBA size=20x20 at ...>, 
+    'ratio': <PIL.Image.Image image mode=RGBA size=40x40 at ...>}}
+    
+    >>> for name, image in extracted['scales'].items():
+    ...     path = pkg_resources.resource_filename(
+    ...         'yafowil.widget.image', 'testing/%s.png' % name)
+    ...     image.save(path, quality=100)

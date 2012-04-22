@@ -1,5 +1,6 @@
 import types
 from PIL import Image
+from imageutils.size import scale
 from yafowil.base import (
     UNSET,
     factory,
@@ -113,6 +114,15 @@ def dpi_extractor(widget, data):
 
 
 def scales_extractor(widget, data):
+    scales = widget.attrs['scales']
+    if not scales or not data.extracted or not data.extracted['image']:
+        return data.extracted
+    image = data.extracted['image']
+    scaled_images = dict()
+    for name, size in scales.items():
+        sizer = scale(size, image.size)
+        scaled_images[name] = image.resize(sizer, Image.ANTIALIAS)
+    data.extracted['scales'] = scaled_images
     return data.extracted
 
 
