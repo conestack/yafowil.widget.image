@@ -80,6 +80,7 @@ Extract ``new``::
     >>> data['image'].extracted
     {'mimetype': 'image/png', 
     'action': 'new', 
+    'image': <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>, 
     'file': <StringIO.StringIO instance at ...>}
     
     >>> data['image'].errors
@@ -99,6 +100,7 @@ Extract ``keep`` returns original value::
     >>> data['image'].extracted
     {'mimetype': 'image/png', 
     'action': 'keep', 
+    'image': <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>, 
     'file': <StringIO.StringIO instance at ...>}
     
     >>> data['image'].errors
@@ -114,11 +116,13 @@ Extract ``replace`` returns new value::
     >>> data['image'].value
     {'mimetype': 'image/png', 
     'action': 'replace', 
+    'image': <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>, 
     'file': <StringIO.StringIO instance at ...>}
     
     >>> data['image'].extracted
     {'mimetype': 'image/jpg', 
     'action': 'replace', 
+    'image': <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=50x50 at ...>, 
     'file': <StringIO.StringIO instance at ...>}
     
     >>> data['image'].extracted['file'].read()
@@ -132,7 +136,10 @@ Extract ``delete`` returns UNSET::
     >>> request['myform.image-action'] = 'delete'
     >>> data = form.extract(request)
     >>> data['image'].extracted
-    {'mimetype': 'image/png', 'action': 'delete', 'file': <UNSET>}
+    {'mimetype': 'image/png', 
+    'action': 'delete', 
+    'image': <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>, 
+    'file': <UNSET>}
     
     >>> data['image'].errors
     []
@@ -269,6 +276,67 @@ Maxsize::
     ...     'image',
     ...     props={
     ...         'maxsize': (60, 60),
+    ...     }
+    ... )
+    >>> data = form.extract(request)
+    >>> data['image'].errors
+    []
+
+DPI extraction::
+
+    >>> image.info['dpi']
+    (72, 72)
+
+Minimum DPI::
+
+    >>> form['image'] = factory(
+    ...     'image',
+    ...     props={
+    ...         'mindpi': (80, 80),
+    ...     }
+    ... )
+    >>> request = {
+    ...     'myform.image': {
+    ...         'file': StringIO(dummy_png),
+    ...         'mimetype': 'image/png',
+    ...     },
+    ... }
+    >>> data = form.extract(request)
+    >>> data['image'].errors
+    [ExtractionError('Image must have at least 80 x 80 DPI',)]
+    
+    >>> form['image'] = factory(
+    ...     'image',
+    ...     props={
+    ...         'mindpi': (60, 60),
+    ...     }
+    ... )
+    >>> data = form.extract(request)
+    >>> data['image'].errors
+    []
+
+Maximum DPI::
+
+    >>> form['image'] = factory(
+    ...     'image',
+    ...     props={
+    ...         'maxdpi': (60, 60),
+    ...     }
+    ... )
+    >>> request = {
+    ...     'myform.image': {
+    ...         'file': StringIO(dummy_png),
+    ...         'mimetype': 'image/png',
+    ...     },
+    ... }
+    >>> data = form.extract(request)
+    >>> data['image'].errors
+    [ExtractionError('Image must have a maximum of 60 x 60 DPI',)]
+    
+    >>> form['image'] = factory(
+    ...     'image',
+    ...     props={
+    ...         'maxdpi': (80, 80),
     ...     }
     ... )
     >>> data = form.extract(request)

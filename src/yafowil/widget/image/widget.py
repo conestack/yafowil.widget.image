@@ -52,15 +52,23 @@ def mimetype_extractor(widget, data):
     return data.extracted
 
 
+def image_extractor(widget, data):
+    """Creates a PIL image for subsequent extractors and set it to extracted
+    data at key ``image``.
+    """
+    if data.extracted and \
+       data.extracted['file']:
+        data.extracted['image'] = Image.open(data.extracted['file'])
+        data.extracted['file'].seek(0)
+    return data.extracted
+
+
 def size_extractor(widget, data):
     minsize = widget.attrs['minsize']
     maxsize = widget.attrs['maxsize']
     if not minsize and not maxsize:
         return data.extracted
-    file = data.extracted['file']
-    image = Image.open(file)
-    file.seek(0)
-    size = image.size
+    size = data.extracted['image'].size
     if minsize:
         if size[0] < minsize[0] or size[1] < minsize[1]:
             raise ExtractionError(
@@ -75,6 +83,21 @@ def size_extractor(widget, data):
 
 
 def dpi_extractor(widget, data):
+    mindpi = widget.attrs['mindpi']
+    maxdpi = widget.attrs['maxdpi']
+    if not mindpi and not maxdpi:
+        return data.extracted
+    dpi = data.extracted['image'].info['dpi']
+    if mindpi:
+        if dpi[0] < mindpi[0] or dpi[1] < mindpi[1]:
+            raise ExtractionError(
+                u"Image must have at least %s x %s DPI" % \
+                    (mindpi[0], mindpi[1]))
+    if maxdpi:
+        if dpi[0] > maxdpi[0] or dpi[1] > maxdpi[1]:
+            raise ExtractionError(
+                u"Image must have a maximum of %s x %s DPI" % \
+                    (maxdpi[0], maxdpi[1]))
     return data.extracted
 
 
@@ -103,6 +126,7 @@ factory.register(
         generic_required_extractor,
         file_extractor,
         mimetype_extractor,
+        image_extractor,
         size_extractor,
         dpi_extractor,
         crop_ectractor,   
@@ -162,12 +186,12 @@ pixel as integer.
 
 factory.defaults['image.mindpi'] = None
 factory.doc['props']['image.mindpi'] = """\
-Minimum DPI of image.
+Minimum DPI of image defined as 2-tuple containing (x, y).
 """
 
 factory.defaults['image.maxdpi'] = None
 factory.doc['props']['image.maxdpi'] = """\
-Maximum DPI of image.
+Maximum DPI of image defined as 2-tuple containing (x, y).
 """
 
 factory.defaults['image.crop'] = None
