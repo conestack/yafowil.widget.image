@@ -56,8 +56,7 @@ def image_extractor(widget, data):
     """Creates a PIL image for subsequent extractors and set it to extracted
     data at key ``image``.
     """
-    if data.extracted and \
-       data.extracted['file']:
+    if data.extracted and data.extracted['file']:
         data.extracted['image'] = Image.open(data.extracted['file'])
         data.extracted['file'].seek(0)
     return data.extracted
@@ -68,17 +67,23 @@ def size_extractor(widget, data):
     maxsize = widget.attrs['maxsize']
     if not minsize and not maxsize:
         return data.extracted
-    size = data.extracted['image'].size
-    if minsize:
-        if size[0] < minsize[0] or size[1] < minsize[1]:
-            raise ExtractionError(
-                u"Image must have a minimum size of %s x %s pixel" % \
-                    (minsize[0], minsize[1]))
-    if maxsize:
-        if size[0] > maxsize[0] or size[1] > maxsize[1]:
-            raise ExtractionError(
-                u"Image must have a maximum size of %s x %s pixel" % \
-                    (maxsize[0], maxsize[1]))
+    if data.extracted and data.extracted['image']:
+        size = data.extracted['image'].size
+        if minsize == maxsize:
+            if size[0] != minsize[0] or size[1] != minsize[1]:
+                raise ExtractionError(
+                    u"Image must have a size of %s x %s pixel" % \
+                        (minsize[0], minsize[1]))
+        if minsize:
+            if size[0] < minsize[0] or size[1] < minsize[1]:
+                raise ExtractionError(
+                    u"Image must have a minimum size of %s x %s pixel" % \
+                        (minsize[0], minsize[1]))
+        if maxsize:
+            if size[0] > maxsize[0] or size[1] > maxsize[1]:
+                raise ExtractionError(
+                    u"Image must have a maximum size of %s x %s pixel" % \
+                        (maxsize[0], maxsize[1]))
     return data.extracted
 
 
@@ -87,25 +92,34 @@ def dpi_extractor(widget, data):
     maxdpi = widget.attrs['maxdpi']
     if not mindpi and not maxdpi:
         return data.extracted
-    dpi = data.extracted['image'].info['dpi']
-    if mindpi:
-        if dpi[0] < mindpi[0] or dpi[1] < mindpi[1]:
-            raise ExtractionError(
-                u"Image must have at least %s x %s DPI" % \
-                    (mindpi[0], mindpi[1]))
-    if maxdpi:
-        if dpi[0] > maxdpi[0] or dpi[1] > maxdpi[1]:
-            raise ExtractionError(
-                u"Image must have a maximum of %s x %s DPI" % \
-                    (maxdpi[0], maxdpi[1]))
-    return data.extracted
-
-
-def crop_ectractor(widget, data):
+    if data.extracted and data.extracted['image']:
+        dpi = data.extracted['image'].info['dpi']
+        if mindpi == maxdpi:
+            if dpi[0] != mindpi[0] or dpi[1] != mindpi[1]:
+                raise ExtractionError(
+                    u"Image must have a resolution of %s x %s DPI" % \
+                        (mindpi[0], mindpi[1]))
+        if mindpi:
+            if dpi[0] < mindpi[0] or dpi[1] < mindpi[1]:
+                raise ExtractionError(
+                    u"Image must have at least %s x %s DPI" % \
+                        (mindpi[0], mindpi[1]))
+        if maxdpi:
+            if dpi[0] > maxdpi[0] or dpi[1] > maxdpi[1]:
+                raise ExtractionError(
+                    u"Image must have a maximum of %s x %s DPI" % \
+                        (maxdpi[0], maxdpi[1]))
     return data.extracted
 
 
 def scales_extractor(widget, data):
+    return data.extracted
+
+
+def crop_extractor(widget, data):
+    if widget.attrs['crop'] and data.extracted and data.extracted['image']:
+        image = widget.extracted['image']
+        data.extracted['cropped'] = image.crop(widget.attrs['crop'])
     return data.extracted
 
 
@@ -129,8 +143,8 @@ factory.register(
         image_extractor,
         size_extractor,
         dpi_extractor,
-        crop_ectractor,   
-        scales_extractor],
+        scales_extractor,
+        crop_extractor],
     edit_renderers=[
         input_file_edit_renderer,
         file_options_renderer,
@@ -194,17 +208,17 @@ factory.doc['props']['image.maxdpi'] = """\
 Maximum DPI of image defined as 2-tuple containing (x, y).
 """
 
-factory.defaults['image.crop'] = None
-factory.doc['props']['image.crop'] = """\
-Crop extracted file to size defined as 2-tuple containing (width, height) in
-pixel as integer. The created cropped image gets placed in the return value 
-returned by file extractor under key ``cropped``.
-"""
-
 factory.defaults['image.scales'] = None
 factory.doc['props']['image.scales'] = """\
 Scales to create on extraction. Scales are defined as dict, where the key
 represents the scale name and the value is a 2-tuple containing (width, height)
-in pixel as integer. The created scales get placed in the return value returned
-by file extractor under key ``scales``.
+in pixel. The created scales get placed in the return value returned by file
+extractor under key ``scales``.
+"""
+
+factory.defaults['image.crop'] = None
+factory.doc['props']['image.crop'] = """\
+Crop extracted file to size defined as 4-tuple containing
+(left, upper, right, lower) in pixel. The created cropped image gets placed
+in the return value returned by file extractor under key ``cropped``.
 """

@@ -282,6 +282,30 @@ Maxsize::
     >>> data['image'].errors
     []
 
+Exact size::
+
+    >>> form['image'] = factory(
+    ...     'image',
+    ...     props={
+    ...         'minsize': (40, 40),
+    ...         'maxsize': (40, 40),
+    ...     }
+    ... )
+    >>> data = form.extract(request)
+    >>> data['image'].errors
+    [ExtractionError('Image must have a size of 40 x 40 pixel',)]
+    
+    >>> form['image'] = factory(
+    ...     'image',
+    ...     props={
+    ...         'minsize': (50, 50),
+    ...         'maxsize': (50, 50),
+    ...     }
+    ... )
+    >>> data = form.extract(request)
+    >>> data['image'].errors
+    []
+
 DPI extraction::
 
     >>> image.info['dpi']
@@ -337,6 +361,36 @@ Maximum DPI::
     ...     'image',
     ...     props={
     ...         'maxdpi': (80, 80),
+    ...     }
+    ... )
+    >>> data = form.extract(request)
+    >>> data['image'].errors
+    []
+
+Exact DPI::
+
+    >>> form['image'] = factory(
+    ...     'image',
+    ...     props={
+    ...         'mindpi': (60, 60),
+    ...         'maxdpi': (60, 60),
+    ...     }
+    ... )
+    >>> request = {
+    ...     'myform.image': {
+    ...         'file': StringIO(dummy_png),
+    ...         'mimetype': 'image/png',
+    ...     },
+    ... }
+    >>> data = form.extract(request)
+    >>> data['image'].errors
+    [ExtractionError('Image must have a resolution of 60 x 60 DPI',)]
+    
+    >>> form['image'] = factory(
+    ...     'image',
+    ...     props={
+    ...         'mindpi': (72, 72),
+    ...         'maxdpi': (72, 72),
     ...     }
     ... )
     >>> data = form.extract(request)
