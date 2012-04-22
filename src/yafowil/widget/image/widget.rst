@@ -8,6 +8,27 @@ Import requirements::
     >>> from StringIO import StringIO
     >>> from yafowil.base import factory
 
+Provide testing dummy files::
+
+    >>> def dummy_file_data(filename):
+    ...     path = pkg_resources.resource_filename(
+    ...         'yafowil.widget.image', 'testing/%s' % filename)
+    ...     with open(path) as file:
+    ...         data = file.read()
+    ...     return data
+    
+    >>> dummy_png = dummy_file_data('dummy.png')
+    >>> dummy_png
+    '\x89PNG\r\n...\x00IEND\xaeB`\x82'
+    
+    >>> dummy_jpg = dummy_file_data('dummy.jpg')
+    >>> dummy_jpg
+    '\xff\xd8\xff\xe0\x00\x10JFIF\...?\xff\xd9'
+    
+    >>> dummy_pdf = dummy_file_data('dummy.pdf')
+    >>> dummy_pdf
+    '%PDF-1.5\n%\...\n956\n%%EOF\n'
+
 Empty image::
 
     >>> form = factory(
@@ -22,20 +43,13 @@ Empty image::
     <BLANKLINE>
 
 Image with value. Default file action keep is checked::
-
-    >>> image_path = pkg_resources.resource_filename(
-    ...     'yafowil.widget.image', 'testing/dummy.png')
     
-    >>> os.path.exists(image_path)
-    True
-    
-    >>> with open(image_path) as dummy_image:
-    ...     value = dummy_image.read()
-    
-    >>> value
-    '\x89PNG\r\n...\x00IEND\xaeB`\x82'
-    
-    >>> form['image'] = factory('image', value={'file': StringIO(value)})
+    >>> form['image'] = factory(
+    ...     'image',
+    ...     value={
+    ...         'file': StringIO(dummy_png),
+    ...         'mimetype': 'image/png',
+    ...     })
     >>> pxml(form())
     <form action="myaction" enctype="multipart/form-data" id="form-myform" method="post" novalidate="novalidate">
       <input accept="image/*" class="image" id="input-myform-image" name="myform.image" type="file"/>
@@ -57,59 +71,78 @@ Image with value. Default file action keep is checked::
 Extract ``new``::
 
     >>> request = {
-    ...     'myform.image': {'file': StringIO('123')},
+    ...     'myform.image': {
+    ...         'file': StringIO(dummy_png),
+    ...         'mimetype': 'image/png',
+    ...     },
     ... }
-    >>> data = form.extract(request)    
-    >>> data.printtree()
-    <RuntimeData myform, value=<UNSET>, extracted=odict([('image', {'action': 'new', 'file': <StringIO.StringIO instance at ...>})]) at ...>
-      <RuntimeData myform.image, value={'file': <StringIO.StringIO instance at ...>}, extracted={'action': 'new', 'file': <StringIO.StringIO instance at ...>} at ...>
+    >>> data = form.extract(request)
+    >>> data['image'].extracted
+    {'mimetype': 'image/png', 
+    'action': 'new', 
+    'file': <StringIO.StringIO instance at ...>}
+    
+    >>> data['image'].errors
+    []
+    
 
 Extract ``keep`` returns original value::
     
     >>> request = {
-    ...     'myform.image': {'file': StringIO('123')},
-    ...     'myform.image-action': 'keep'
+    ...     'myform.image': {
+    ...         'file': StringIO(dummy_jpg),
+    ...         'mimetype': 'image/jpg',
+    ...     },
+    ...     'myform.image-action': 'keep',
     ... }
-    >>> data = form.extract(request)    
-    >>> data.printtree()
-    <RuntimeData myform, value=<UNSET>, extracted=odict([('image', {'action': 'keep', 'file': <StringIO.StringIO instance at ...>})]) at ...>
-      <RuntimeData myform.image, value={'action': 'keep', 'file': <StringIO.StringIO instance at ...>}, extracted={'action': 'keep', 'file': <StringIO.StringIO instance at ...>} at ...>
+    >>> data = form.extract(request)  
+    >>> data['image'].extracted
+    {'mimetype': 'image/png', 
+    'action': 'keep', 
+    'file': <StringIO.StringIO instance at ...>}
+    
+    >>> data['image'].errors
+    []
 
     >>> data['image'].extracted['file'].read()
     '\x89PNG\r\n\...\x00IEND\xaeB`\x82'
-    
-    >>> data['image'].extracted['action']
-    'keep'
 
 Extract ``replace`` returns new value::
 
     >>> request['myform.image-action'] = 'replace'
     >>> data = form.extract(request)
-    >>> data.extracted
-    odict([('image', {'action': 'replace', 'file': <StringIO.StringIO instance at ...>})])
+    >>> data['image'].value
+    {'mimetype': 'image/png', 
+    'action': 'replace', 
+    'file': <StringIO.StringIO instance at ...>}
+    
+    >>> data['image'].extracted
+    {'mimetype': 'image/jpg', 
+    'action': 'replace', 
+    'file': <StringIO.StringIO instance at ...>}
     
     >>> data['image'].extracted['file'].read()
-    '123'
+    '\xff\xd8\xff\xe0\x00\x10JFIF\...?\xff\xd9'
     
-    >>> data['image'].extracted['action']
-    'replace'
+    >>> data['image'].errors
+    []
 
 Extract ``delete`` returns UNSET::
 
     >>> request['myform.image-action'] = 'delete'
     >>> data = form.extract(request)
-    >>> data.extracted
-    odict([('image', {'action': 'delete', 'file': <UNSET>})])
+    >>> data['image'].extracted
+    {'mimetype': 'image/png', 'action': 'delete', 'file': <UNSET>}
     
-    >>> data['image'].extracted['action']
-    'delete'
+    >>> data['image'].errors
+    []
 
 If file URL of existing image is known, ``src`` property can be set do display
 image above controls::
 
     >>> form['image'] = factory(
     ...     'image',
-    ...     value=value,
+    ...     value={'file': StringIO(dummy_png)},
     ...     props={
     ...         'src': 'http://www.example.com/someimage.png',
     ...         'alt': 'Alternative text',
@@ -132,3 +165,42 @@ image above controls::
       </div>
     </form>
     <BLANKLINE>
+
+Mimetype extraction::
+
+    >>> form['image'] = factory(
+    ...     'image',
+    ...     props={
+    ...         'accept': 'text/*'
+    ...     }
+    ... )
+    >>> request = {
+    ...     'myform.image': {
+    ...         'file': StringIO(dummy_jpg),
+    ...         'mimetype': 'image/jpg',
+    ...     },
+    ... }
+    >>> data = form.extract(request)
+    Traceback (most recent call last):
+      ...
+    ValueError: Incompatible mimetype text/*
+    
+    >>> form['image'] = factory(
+    ...     'image',
+    ...     props={
+    ...         'accept': 'image/png'
+    ...     }
+    ... )
+    >>> data = form.extract(request)
+    >>> data['image'].errors
+    [ExtractionError('Uploaded image not of type png',)]
+    
+    >>> request = {
+    ...     'myform.image': {
+    ...         'file': StringIO(dummy_pdf),
+    ...         'mimetype': 'application/pdf',
+    ...     },
+    ... }
+    >>> data = form.extract(request)
+    >>> data['image'].errors
+    [ExtractionError('Uploaded file is not an image.',)]
