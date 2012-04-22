@@ -166,7 +166,9 @@ image above controls::
     </form>
     <BLANKLINE>
 
-Mimetype extraction::
+Mimetype extraction.
+
+Image ``accept`` must be of type ``image``::
 
     >>> form['image'] = factory(
     ...     'image',
@@ -184,7 +186,9 @@ Mimetype extraction::
     Traceback (most recent call last):
       ...
     ValueError: Incompatible mimetype text/*
-    
+
+Explicit image type::
+
     >>> form['image'] = factory(
     ...     'image',
     ...     props={
@@ -194,7 +198,9 @@ Mimetype extraction::
     >>> data = form.extract(request)
     >>> data['image'].errors
     [ExtractionError('Uploaded image not of type png',)]
-    
+
+Uploded file not an image::
+
     >>> request = {
     ...     'myform.image': {
     ...         'file': StringIO(dummy_pdf),
@@ -204,3 +210,67 @@ Mimetype extraction::
     >>> data = form.extract(request)
     >>> data['image'].errors
     [ExtractionError('Uploaded file is not an image.',)]
+
+Size extraction::
+
+    >>> buffer = StringIO(dummy_png)
+    >>> image = PIL.Image.open(buffer)
+    >>> image
+    <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>
+    
+    >>> buffer.seek(0)
+    >>> buffer.read()
+    '\x89PNG\r\n...\x00IEND\xaeB`\x82'
+    
+    >>> image.size
+    (50, 50)
+
+Minsize::
+
+    >>> form['image'] = factory(
+    ...     'image',
+    ...     props={
+    ...         'minsize': (60, 60),
+    ...     }
+    ... )
+    >>> request = {
+    ...     'myform.image': {
+    ...         'file': StringIO(dummy_png),
+    ...         'mimetype': 'image/png',
+    ...     },
+    ... }
+    >>> data = form.extract(request)
+    >>> data['image'].errors
+    [ExtractionError('Image must have a minimum size of 60 x 60 pixel',)]
+    
+    >>> form['image'] = factory(
+    ...     'image',
+    ...     props={
+    ...         'minsize': (40, 40),
+    ...     }
+    ... )
+    >>> data = form.extract(request)
+    >>> data['image'].errors
+    []
+
+Maxsize::
+
+    >>> form['image'] = factory(
+    ...     'image',
+    ...     props={
+    ...         'maxsize': (40, 40),
+    ...     }
+    ... )
+    >>> data = form.extract(request)
+    >>> data['image'].errors
+    [ExtractionError('Image must have a maximum size of 40 x 40 pixel',)]
+    
+    >>> form['image'] = factory(
+    ...     'image',
+    ...     props={
+    ...         'maxsize': (60, 60),
+    ...     }
+    ... )
+    >>> data = form.extract(request)
+    >>> data['image'].errors
+    []

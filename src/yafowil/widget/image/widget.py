@@ -1,4 +1,5 @@
 import types
+from PIL import Image
 from yafowil.base import (
     UNSET,
     factory,
@@ -52,6 +53,24 @@ def mimetype_extractor(widget, data):
 
 
 def size_extractor(widget, data):
+    minsize = widget.attrs['minsize']
+    maxsize = widget.attrs['maxsize']
+    if not minsize and not maxsize:
+        return data.extracted
+    file = data.extracted['file']
+    image = Image.open(file)
+    file.seek(0)
+    size = image.size
+    if minsize:
+        if size[0] < minsize[0] or size[1] < minsize[1]:
+            raise ExtractionError(
+                u"Image must have a minimum size of %s x %s pixel" % \
+                    (minsize[0], minsize[1]))
+    if maxsize:
+        if size[0] > maxsize[0] or size[1] > maxsize[1]:
+            raise ExtractionError(
+                u"Image must have a maximum size of %s x %s pixel" % \
+                    (maxsize[0], maxsize[1]))
     return data.extracted
 
 
