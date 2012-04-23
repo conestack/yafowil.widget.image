@@ -1,3 +1,6 @@
+yafowil.widget.image
+====================
+
 Import requirements::
 
     >>> import os
@@ -28,6 +31,10 @@ Provide testing dummy files::
     >>> dummy_pdf = dummy_file_data('dummy.pdf')
     >>> dummy_pdf
     '%PDF-1.5\n%\...\n956\n%%EOF\n'
+
+
+Rendering
+---------
 
 Empty image::
 
@@ -68,6 +75,42 @@ Image with value. Default file action keep is checked::
     </form>
     <BLANKLINE>
 
+If file URL of existing image is known, ``src`` property can be set do display
+image above controls::
+
+    >>> form['image'] = factory(
+    ...     'image',
+    ...     value={
+    ...         'file': StringIO(dummy_png),
+    ...         'mimetype': 'image/png',
+    ...     },
+    ...     props={
+    ...         'src': 'http://www.example.com/someimage.png',
+    ...         'alt': 'Alternative text',
+    ...     })
+    >>> pxml(form())
+    <form action="myaction" enctype="multipart/form-data" id="form-myform" method="post" novalidate="novalidate">
+      <img alt="Alternative text" class="image-preview" id="image-preview-myform-image" src="http://www.example.com/someimage.png"/>
+      <input accept="image/*" class="image" id="input-myform-image" name="myform.image" type="file"/>
+      <div id="radio-myform-image-keep">
+        <input checked="checked" class="image" id="input-myform-image-keep" name="myform.image-action" type="radio" value="keep"/>
+        <span>Keep Existing image</span>
+      </div>
+      <div id="radio-myform-image-replace">
+        <input class="image" id="input-myform-image-replace" name="myform.image-action" type="radio" value="replace"/>
+        <span>Replace existing image</span>
+      </div>
+      <div id="radio-myform-image-delete">
+        <input class="image" id="input-myform-image-delete" name="myform.image-action" type="radio" value="delete"/>
+        <span>Delete existing image</span>
+      </div>
+    </form>
+    <BLANKLINE>
+
+
+Base Extraction
+---------------
+
 Extract ``new``::
 
     >>> request = {
@@ -85,7 +128,6 @@ Extract ``new``::
     
     >>> data['image'].errors
     []
-    
 
 Extract ``keep`` returns original value::
     
@@ -144,36 +186,9 @@ Extract ``delete`` returns UNSET::
     >>> data['image'].errors
     []
 
-If file URL of existing image is known, ``src`` property can be set do display
-image above controls::
 
-    >>> form['image'] = factory(
-    ...     'image',
-    ...     value={'file': StringIO(dummy_png)},
-    ...     props={
-    ...         'src': 'http://www.example.com/someimage.png',
-    ...         'alt': 'Alternative text',
-    ...     })
-    >>> pxml(form())
-    <form action="myaction" enctype="multipart/form-data" id="form-myform" method="post" novalidate="novalidate">
-      <img alt="Alternative text" class="image-preview" id="image-preview-myform-image" src="http://www.example.com/someimage.png"/>
-      <input accept="image/*" class="image" id="input-myform-image" name="myform.image" type="file"/>
-      <div id="radio-myform-image-keep">
-        <input checked="checked" class="image" id="input-myform-image-keep" name="myform.image-action" type="radio" value="keep"/>
-        <span>Keep Existing image</span>
-      </div>
-      <div id="radio-myform-image-replace">
-        <input class="image" id="input-myform-image-replace" name="myform.image-action" type="radio" value="replace"/>
-        <span>Replace existing image</span>
-      </div>
-      <div id="radio-myform-image-delete">
-        <input class="image" id="input-myform-image-delete" name="myform.image-action" type="radio" value="delete"/>
-        <span>Delete existing image</span>
-      </div>
-    </form>
-    <BLANKLINE>
-
-Mimetype extraction.
+Mimetype extraction
+-------------------
 
 Image ``accept`` must be of type ``image``::
 
@@ -218,8 +233,11 @@ Uploded file not an image::
     >>> data['image'].errors
     [ExtractionError('Uploaded file is not an image.',)]
 
-Size extraction::
 
+Size extraction
+---------------
+
+::
     >>> buffer = StringIO(dummy_png)
     >>> image = PIL.Image.open(buffer)
     >>> image
@@ -306,8 +324,11 @@ Exact size::
     >>> data['image'].errors
     []
 
-DPI extraction::
 
+DPI extraction
+--------------
+
+::
     >>> image.info['dpi']
     (72, 72)
 
@@ -397,8 +418,11 @@ Exact DPI::
     >>> data['image'].errors
     []
 
-Scales::
 
+Scales Extraction
+-----------------
+
+::
     >>> form['image'] = factory(
     ...     'image',
     ...     props={
@@ -421,10 +445,462 @@ Scales::
     'action': 'new', 
     'image': <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>, 
     'file': <StringIO.StringIO instance at ...>, 
-    'scales': {'micro': <PIL.Image.Image image mode=RGBA size=20x20 at ...>, 
+    'scales': 
+    {'micro': <PIL.Image.Image image mode=RGBA size=20x20 at ...>, 
     'ratio': <PIL.Image.Image image mode=RGBA size=40x40 at ...>}}
     
     >>> for name, image in extracted['scales'].items():
     ...     path = pkg_resources.resource_filename(
     ...         'yafowil.widget.image', 'testing/%s.png' % name)
     ...     image.save(path, quality=100)
+
+
+Cropping Extraction
+-------------------
+
+Cropping logic::
+
+    >>> left, top, width, height = 7, 3, 30, 40
+    >>> cropped = image.crop((left, top, width, height))
+    >>> path = pkg_resources.resource_filename(
+    ...     'yafowil.widget.image', 'testing/cropped.png')
+    >>> cropped.save(path, quality=100)
+
+Fitting logic::
+
+    >>> from imageutils.size import (
+    ...     same_aspect_ratio,
+    ...     aspect_ratio_approximate,
+    ...     scale_size,
+    ... )
+    >>> same_aspect_ratio((300, 200), (600, 400))
+    True
+
+scale X down::
+
+    >>> scale_size((100, 50), (75, None))
+    (75, 37)
+    
+scale X up::
+
+    >>> scale_size((100, 50), (150, None))
+    (150, 75)
+    
+scale Y down::
+
+    >>> scale_size((100, 50), (None, 25))
+    (50, 25)
+    
+scale Y up::
+
+    >>> scale_size((100, 50), (None, 100))
+    (200, 100)
+
+scale x::
+
+    >>> size_from = (60, 40)
+    >>> size_to = (50, 25)
+    >>> aspect_ratio_approximate(size_from)
+    Decimal('1.50')
+    
+    >>> aspect_ratio_approximate(size_to)
+    Decimal('2.00')
+    
+    >>> aspect_ratio_approximate(size_from) < aspect_ratio_approximate(size_to)
+    True
+    
+    >>> scaled = scale_size(size_from, (size_to[0], None))
+    >>> scaled
+    (50, 33)
+    
+    >>> offset_y = (scaled[1] - size_to[1]) / 2
+    >>> offset_y
+    4
+
+scale y::
+
+    >>> size_from = (60, 40)
+    >>> size_to = (50, 35)
+    >>> aspect_ratio_approximate(size_from)
+    Decimal('1.50')
+    
+    >>> aspect_ratio_approximate(size_to)
+    Decimal('1.43')
+
+    >>> aspect_ratio_approximate(size_from) > aspect_ratio_approximate(size_to)
+    True
+    
+    >>> scaled = scale_size(size_from, (None, size_to[1]))
+    >>> scaled
+    (52, 35)
+    
+    >>> offset_x = (scaled[0] - size_to[0]) / 2
+    >>> offset_x
+    1
+
+Crop as is without offset, size (20, 20)::
+
+    >>> form['image'] = factory(
+    ...     'image',
+    ...     props={
+    ...         'crop': {
+    ...             'size': (20, 20),
+    ...         },
+    ...     }
+    ... )
+    >>> request = {
+    ...     'myform.image': {
+    ...         'file': StringIO(dummy_png),
+    ...         'mimetype': 'image/png',
+    ...     },
+    ... }
+    >>> data = form.extract(request)
+    >>> extracted = data['image'].extracted
+    >>> extracted
+    {'mimetype': 'image/png', 
+    'action': 'new', 
+    'image': <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>, 
+    'cropped': <PIL.Image._ImageCrop image mode=RGBA size=20x20 at ...>, 
+    'file': <StringIO.StringIO instance at ...>}
+    
+    >>> path = pkg_resources.resource_filename(
+    ...     'yafowil.widget.image', 'testing/crop_size_20_20.png')
+    >>> extracted['cropped'].save(path, quality=100)
+
+Crop as is without offset, size (40, 20)::
+
+    >>> form['image'] = factory(
+    ...     'image',
+    ...     props={
+    ...         'crop': {
+    ...             'size': (40, 20),
+    ...         },
+    ...     }
+    ... )
+    >>> request = {
+    ...     'myform.image': {
+    ...         'file': StringIO(dummy_png),
+    ...         'mimetype': 'image/png',
+    ...     },
+    ... }
+    >>> data = form.extract(request)
+    >>> extracted = data['image'].extracted
+    >>> extracted
+    {'mimetype': 'image/png', 
+    'action': 'new', 
+    'image': <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>, 
+    'cropped': <PIL.Image._ImageCrop image mode=RGBA size=40x20 at ...>, 
+    'file': <StringIO.StringIO instance at ...>}
+    
+    >>> path = pkg_resources.resource_filename(
+    ...     'yafowil.widget.image', 'testing/crop_size_40_20.png')
+    >>> extracted['cropped'].save(path, quality=100)
+
+Crop as is without offset, size (20, 40)::
+
+    >>> form['image'] = factory(
+    ...     'image',
+    ...     props={
+    ...         'crop': {
+    ...             'size': (20, 40),
+    ...         },
+    ...     }
+    ... )
+    >>> request = {
+    ...     'myform.image': {
+    ...         'file': StringIO(dummy_png),
+    ...         'mimetype': 'image/png',
+    ...     },
+    ... }
+    >>> data = form.extract(request)
+    >>> extracted = data['image'].extracted
+    >>> extracted
+    {'mimetype': 'image/png', 
+    'action': 'new', 
+    'image': <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>, 
+    'cropped': <PIL.Image._ImageCrop image mode=RGBA size=20x40 at ...>, 
+    'file': <StringIO.StringIO instance at ...>}
+    
+    >>> path = pkg_resources.resource_filename(
+    ...     'yafowil.widget.image', 'testing/crop_size_20_40.png')
+    >>> extracted['cropped'].save(path, quality=100)
+
+Crop with offset (5, 3), size (20, 40)::
+
+    >>> form['image'] = factory(
+    ...     'image',
+    ...     props={
+    ...         'crop': {
+    ...             'size': (20, 40),
+    ...             'offset': (5, 3),
+    ...         },
+    ...     }
+    ... )
+    >>> request = {
+    ...     'myform.image': {
+    ...         'file': StringIO(dummy_png),
+    ...         'mimetype': 'image/png',
+    ...     },
+    ... }
+    >>> data = form.extract(request)
+    >>> extracted = data['image'].extracted
+    >>> extracted
+    {'mimetype': 'image/png', 
+    'action': 'new', 
+    'image': <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>, 
+    'cropped': <PIL.Image._ImageCrop image mode=RGBA size=20x40 at ...>, 
+    'file': <StringIO.StringIO instance at ...>}
+    
+    >>> path = pkg_resources.resource_filename(
+    ...     'yafowil.widget.image', 'testing/crop_size_20_40_offset_5_3.png')
+    >>> extracted['cropped'].save(path, quality=100)
+
+Crop with offset (5, 0), size (50, 20) -> x overflow::
+
+    >>> form['image'] = factory(
+    ...     'image',
+    ...     props={
+    ...         'crop': {
+    ...             'size': (50, 20),
+    ...             'offset': (5, 0),
+    ...         },
+    ...     }
+    ... )
+    >>> request = {
+    ...     'myform.image': {
+    ...         'file': StringIO(dummy_png),
+    ...         'mimetype': 'image/png',
+    ...     },
+    ... }
+    >>> data = form.extract(request)
+    >>> extracted = data['image'].extracted
+    >>> extracted
+    {'mimetype': 'image/png', 
+    'action': 'new', 
+    'image': <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>, 
+    'cropped': <PIL.Image._ImageCrop image mode=RGBA size=50x20 at ...>, 
+    'file': <StringIO.StringIO instance at ...>}
+    
+    >>> path = pkg_resources.resource_filename(
+    ...     'yafowil.widget.image', 'testing/crop_size_50_20_offset_5_0.png')
+    >>> extracted['cropped'].save(path, quality=100)
+
+Crop fitting::
+
+    >>> dummy_40_20_png = dummy_file_data('crop_size_40_20.png')
+    >>> dummy_40_20_png
+    '\x89PNG\r\n\...\x00IEND\xaeB`\x82'
+    
+    >>> dummy_20_40_png = dummy_file_data('crop_size_20_40.png')
+    >>> dummy_20_40_png
+    '\x89PNG\r\n\...\x00IEND\xaeB`\x82'
+
+Crop fitting from lanscape, size (30, 18)::
+
+    >>> form['image'] = factory(
+    ...     'image',
+    ...     props={
+    ...         'crop': {
+    ...             'size': (30, 18),
+    ...             'fitting': True,
+    ...         },
+    ...     }
+    ... )
+    >>> request = {
+    ...     'myform.image': {
+    ...         'file': StringIO(dummy_40_20_png),
+    ...         'mimetype': 'image/png',
+    ...     },
+    ... }
+    >>> data = form.extract(request)
+    >>> extracted = data['image'].extracted
+    >>> extracted
+    {'mimetype': 'image/png', 
+    'action': 'new', 
+    'image': <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=40x20 at ...>, 
+    'cropped': <PIL.Image._ImageCrop image mode=RGBA size=30x18 at ...>, 
+    'file': <StringIO.StringIO instance at ...>}
+    
+    >>> path = pkg_resources.resource_filename(
+    ...     'yafowil.widget.image', 'testing/crop_fitting_ls_30_18.png')
+    >>> extracted['cropped'].save(path, quality=100)
+
+Crop fitting from landscape, size (18, 30)::
+
+    >>> form['image'] = factory(
+    ...     'image',
+    ...     props={
+    ...         'crop': {
+    ...             'size': (18, 30),
+    ...             'fitting': True,
+    ...         },
+    ...     }
+    ... )
+    >>> request = {
+    ...     'myform.image': {
+    ...         'file': StringIO(dummy_40_20_png),
+    ...         'mimetype': 'image/png',
+    ...     },
+    ... }
+    >>> data = form.extract(request)
+    >>> extracted = data['image'].extracted
+    >>> extracted
+    {'mimetype': 'image/png', 
+    'action': 'new', 
+    'image': <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=40x20 at ...>, 
+    'cropped': <PIL.Image._ImageCrop image mode=RGBA size=18x30 at ...>, 
+    'file': <StringIO.StringIO instance at ...>}
+    
+    >>> path = pkg_resources.resource_filename(
+    ...     'yafowil.widget.image', 'testing/crop_fitting_ls_18_30.png')
+    >>> extracted['cropped'].save(path, quality=100)
+
+Crop fitting from portrait, size (30, 18)::
+
+    >>> form['image'] = factory(
+    ...     'image',
+    ...     props={
+    ...         'crop': {
+    ...             'size': (30, 18),
+    ...             'fitting': True,
+    ...         },
+    ...     }
+    ... )
+    >>> request = {
+    ...     'myform.image': {
+    ...         'file': StringIO(dummy_20_40_png),
+    ...         'mimetype': 'image/png',
+    ...     },
+    ... }
+    >>> data = form.extract(request)
+    >>> extracted = data['image'].extracted
+    >>> extracted
+    {'mimetype': 'image/png', 
+    'action': 'new', 
+    'image': <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=20x40 at ...>, 
+    'cropped': <PIL.Image._ImageCrop image mode=RGBA size=30x18 at ...>, 
+    'file': <StringIO.StringIO instance at ...>}
+    
+    >>> path = pkg_resources.resource_filename(
+    ...     'yafowil.widget.image', 'testing/crop_fitting_pt_30_18.png')
+    >>> extracted['cropped'].save(path, quality=100)
+
+Crop fitting from portrait, size (18, 30)::
+
+    >>> form['image'] = factory(
+    ...     'image',
+    ...     props={
+    ...         'crop': {
+    ...             'size': (18, 30),
+    ...             'fitting': True,
+    ...         },
+    ...     }
+    ... )
+    >>> request = {
+    ...     'myform.image': {
+    ...         'file': StringIO(dummy_20_40_png),
+    ...         'mimetype': 'image/png',
+    ...     },
+    ... }
+    >>> data = form.extract(request)
+    >>> extracted = data['image'].extracted
+    >>> extracted
+    {'mimetype': 'image/png', 
+    'action': 'new', 
+    'image': <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=20x40 at ...>, 
+    'cropped': <PIL.Image._ImageCrop image mode=RGBA size=18x30 at ...>, 
+    'file': <StringIO.StringIO instance at ...>}
+    
+    >>> path = pkg_resources.resource_filename(
+    ...     'yafowil.widget.image', 'testing/crop_fitting_pt_18_30.png')
+    >>> extracted['cropped'].save(path, quality=100)
+
+Crop fitting square -> thus also same ratio::
+
+    >>> form['image'] = factory(
+    ...     'image',
+    ...     props={
+    ...         'crop': {
+    ...             'size': (30, 30),
+    ...             'fitting': True,
+    ...         },
+    ...     }
+    ... )
+    >>> request = {
+    ...     'myform.image': {
+    ...         'file': StringIO(dummy_png),
+    ...         'mimetype': 'image/png',
+    ...     },
+    ... }
+    >>> data = form.extract(request)
+    >>> extracted = data['image'].extracted
+    >>> extracted
+    {'mimetype': 'image/png', 
+    'action': 'new', 
+    'image': <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>, 
+    'cropped': <PIL.Image._ImageCrop image mode=RGBA size=30x30 at ...>, 
+    'file': <StringIO.StringIO instance at ...>}
+    
+    >>> path = pkg_resources.resource_filename(
+    ...     'yafowil.widget.image', 'testing/crop_fitting_sq_30_30.png')
+    >>> extracted['cropped'].save(path, quality=100)
+
+Crop fitting portrait from square::
+
+    >>> form['image'] = factory(
+    ...     'image',
+    ...     props={
+    ...         'crop': {
+    ...             'size': (40, 50),
+    ...             'fitting': True,
+    ...         },
+    ...     }
+    ... )
+    >>> request = {
+    ...     'myform.image': {
+    ...         'file': StringIO(dummy_png),
+    ...         'mimetype': 'image/png',
+    ...     },
+    ... }
+    >>> data = form.extract(request)
+    >>> extracted = data['image'].extracted
+    >>> extracted
+    {'mimetype': 'image/png', 
+    'action': 'new', 
+    'image': <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>, 
+    'cropped': <PIL.Image._ImageCrop image mode=RGBA size=40x50 at ...>, 
+    'file': <StringIO.StringIO instance at ...>}
+    
+    >>> path = pkg_resources.resource_filename(
+    ...     'yafowil.widget.image', 'testing/crop_fitting_sq_40_50.png')
+    >>> extracted['cropped'].save(path, quality=100)
+
+Crop fitting lanscape from square::
+
+    >>> form['image'] = factory(
+    ...     'image',
+    ...     props={
+    ...         'crop': {
+    ...             'size': (48, 40),
+    ...             'fitting': True,
+    ...         },
+    ...     }
+    ... )
+    >>> request = {
+    ...     'myform.image': {
+    ...         'file': StringIO(dummy_png),
+    ...         'mimetype': 'image/png',
+    ...     },
+    ... }
+    >>> data = form.extract(request)
+    >>> extracted = data['image'].extracted
+    >>> extracted
+    {'mimetype': 'image/png', 
+    'action': 'new', 
+    'image': <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>, 
+    'cropped': <PIL.Image._ImageCrop image mode=RGBA size=48x40 at ...>, 
+    'file': <StringIO.StringIO instance at ...>}
+    
+    >>> path = pkg_resources.resource_filename(
+    ...     'yafowil.widget.image', 'testing/crop_fitting_sq_48_40.png')
+    >>> extracted['cropped'].save(path, quality=100)

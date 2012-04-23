@@ -10,3 +10,16 @@ parts/
 src/yafowil.widget.image.egg-info/
 src/yafowil/widget/image/testing/micro.png
 src/yafowil/widget/image/testing/ratio.png
+src/yafowil/widget/image/testing/cropped.png
+src/yafowil/widget/image/testing/crop_fitting_ls_18_30.png
+src/yafowil/widget/image/testing/crop_fitting_ls_30_18.png
+src/yafowil/widget/image/testing/crop_fitting_pt_18_30.png
+src/yafowil/widget/image/testing/crop_fitting_pt_30_18.png
+src/yafowil/widget/image/testing/crop_fitting_sq_30_30.png
+src/yafowil/widget/image/testing/crop_fitting_sq_40_50.png
+src/yafowil/widget/image/testing/crop_fitting_sq_48_40.png
+src/yafowil/widget/image/testing/crop_size_20_20.png
+src/yafowil/widget/image/testing/crop_size_20_40.png
+src/yafowil/widget/image/testing/crop_size_20_40_offset_5_3.png
+src/yafowil/widget/image/testing/crop_size_40_20.png
+src/yafowil/widget/image/testing/crop_size_50_20_offset_5_0.png

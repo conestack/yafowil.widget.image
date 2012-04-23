@@ -1,6 +1,11 @@
 import types
 from PIL import Image
-from imageutils.size import scale
+from imageutils.size import (
+    scale,
+    scale_size,
+    aspect_ratio_approximate,
+    same_aspect_ratio,
+)
 from yafowil.base import (
     UNSET,
     factory,
@@ -120,16 +125,47 @@ def scales_extractor(widget, data):
     image = data.extracted['image']
     scaled_images = dict()
     for name, size in scales.items():
-        sizer = scale(size, image.size)
-        scaled_images[name] = image.resize(sizer, Image.ANTIALIAS)
+        image_size = scale(size, image.size)
+        scaled_images[name] = image.resize(image_size, Image.ANTIALIAS)
     data.extracted['scales'] = scaled_images
     return data.extracted
 
 
 def crop_extractor(widget, data):
-    if widget.attrs['crop'] and data.extracted and data.extracted['image']:
-        image = widget.extracted['image']
-        data.extracted['cropped'] = image.crop(widget.attrs['crop'])
+    """XXX:
+    - support cropping definitions as request parameters.
+        left, top, width, height (for use with JS cropping plugin)
+    - alignment
+        tl (top left), tr (top right), bl (bottom left),
+        br (bottom right), ce (center), rc (right center),
+        lc (left center), tc (top center), bc (bottom center)
+    """
+    crop = widget.attrs['crop']
+    if not crop or not data.extracted or not data.extracted['image']:
+        return data.extracted
+    size = crop['size']
+    offset = crop.get('offset', (0, 0))
+    fitting = crop.get('fitting', False)
+    image = data.extracted['image']
+    image_appr = aspect_ratio_approximate(image.size)
+    crop_appr = aspect_ratio_approximate(size)
+    if fitting:
+        if same_aspect_ratio(size, image.size):
+            image = image.resize(size, Image.ANTIALIAS)
+            offset = (0, 0)
+        # scale x
+        if image_appr < crop_appr:
+            image_size = scale_size(image.size, (size[0], None))
+            image = image.resize(image_size, Image.ANTIALIAS)
+            offset = (0, (image_size[1] - size[1]) / 2)
+        # scale y
+        if image_appr > crop_appr:
+            image_size = scale_size(image.size, (None, size[1]))
+            image = image.resize(image_size, Image.ANTIALIAS)
+            offset = ((image_size[0] - size[0]) / 2, 0)
+    image = image.crop(
+        (offset[0], offset[1], size[0] + offset[0], size[1] + offset[1]))
+    data.extracted['cropped'] = image
     return data.extracted
 
 
@@ -228,7 +264,15 @@ extractor under key ``scales``.
 
 factory.defaults['image.crop'] = None
 factory.doc['props']['image.crop'] = """\
-Crop extracted file to size defined as 4-tuple containing
-(left, upper, right, lower) in pixel. The created cropped image gets placed
-in the return value returned by file extractor under key ``cropped``.
+Crop extracted file to size at offset. The created cropped image gets placed
+in the return value returned by file extractor under key ``cropped``. Crop
+definition is a dict containing:
+
+size
+    (width, height), mandatory
+offset
+    (left, top), defaults to (0, 0)
+fitting
+    Boolean, ignores offset if True, scales image to smaller site of ``size``
+    and centers larger one.
 """
