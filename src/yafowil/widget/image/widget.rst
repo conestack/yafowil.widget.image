@@ -904,3 +904,18 @@ Crop fitting lanscape from square::
     >>> path = pkg_resources.resource_filename(
     ...     'yafowil.widget.image', 'testing/crop_fitting_sq_48_40.png')
     >>> extracted['cropped'].save(path, quality=100)
+
+
+Saving data
+-----------
+
+Save either by filename or file descriptor::
+
+    >>> buffer = StringIO(dummy_png)
+    >>> image = PIL.Image.open(buffer)
+    >>> out = StringIO()
+    >>> image.save(out, 'png', quality=100)
+    >>> out.seek(0)
+    >>> out.read()
+    "\x89PNG\r\n\...\x00IEND\xaeB`\x82"
+    
