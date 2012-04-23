@@ -73,7 +73,7 @@ def size_extractor(widget, data):
     maxsize = widget.attrs['maxsize']
     if not minsize and not maxsize:
         return data.extracted
-    if data.extracted and data.extracted['image']:
+    if data.extracted and data.extracted.get('image'):
         size = data.extracted['image'].size
         if minsize == maxsize:
             if size[0] != minsize[0] or size[1] != minsize[1]:
@@ -98,7 +98,7 @@ def dpi_extractor(widget, data):
     maxdpi = widget.attrs['maxdpi']
     if not mindpi and not maxdpi:
         return data.extracted
-    if data.extracted and data.extracted['image']:
+    if data.extracted and data.extracted.get('image'):
         dpi = data.extracted['image'].info['dpi']
         if mindpi == maxdpi:
             if dpi[0] != mindpi[0] or dpi[1] != mindpi[1]:
@@ -120,7 +120,7 @@ def dpi_extractor(widget, data):
 
 def scales_extractor(widget, data):
     scales = widget.attrs['scales']
-    if not scales or not data.extracted or not data.extracted['image']:
+    if not scales or not data.extracted or not data.extracted.get('image'):
         return data.extracted
     image = data.extracted['image']
     scaled_images = dict()
@@ -141,7 +141,7 @@ def crop_extractor(widget, data):
         lc (left center), tc (top center), bc (bottom center)
     """
     crop = widget.attrs['crop']
-    if not crop or not data.extracted or not data.extracted['image']:
+    if not crop or not data.extracted or not data.extracted.get('image'):
         return data.extracted
     size = crop['size']
     offset = crop.get('offset', (0, 0))
