@@ -22,7 +22,15 @@ if (typeof(window['yafowil']) == "undefined") yafowil = {};
         
         image: {
             
+            // XXX: same needed for file, provide in yafowil directly?
             binder: function(context) {
+                $('input.image').bind('change', function(evt) {
+                    var elem = $(this);
+                    if (!elem.attr('type') == 'radio') {
+                        return;
+                    }
+                    $('input.image[value="replace"]').trigger('click');
+                });
             }
         }
     });
