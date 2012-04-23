@@ -44,7 +44,7 @@ def mimetype_extractor(widget, data):
     """XXX: Move relevant parts to ``yafowil.common.mimetype_extractor``.
     """
     accept = widget.attrs['accept']
-    if not accept:
+    if not data.extracted or not accept:
         return data.extracted
     if not accept.startswith('image'):
         raise ValueError(u"Incompatible mimetype %s" % accept)
