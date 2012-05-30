@@ -2,8 +2,8 @@
 History
 =======
 
-0.9dev
-------
+1.0
+---
 
 - Make it work
   [rnix]
