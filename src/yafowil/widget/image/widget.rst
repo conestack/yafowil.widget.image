@@ -90,7 +90,7 @@ image above controls::
     ...     })
     >>> pxml(form())
     <form action="myaction" enctype="multipart/form-data" id="form-myform" method="post" novalidate="novalidate">
-      <img alt="Alternative text" class="image-preview" id="image-preview-myform-image" src="http://www.example.com/someimage.png"/>
+      <img alt="Alternative text" class="image-preview" id="image-preview-myform-image" src="http://www.example.com/someimage.png?nocache=..."/>
       <input accept="image/*" class="image" id="input-myform-image" name="myform.image" type="file"/>
       <div id="radio-myform-image-keep">
         <input checked="checked" class="image" id="input-myform-image-keep" name="myform.image-action" type="radio" value="keep"/>

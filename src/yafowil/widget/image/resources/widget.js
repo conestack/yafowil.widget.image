@@ -26,15 +26,15 @@ if (typeof(window['yafowil']) == "undefined") yafowil = {};
                 // XXX: file needs anyway, provide in yafowil directly?
                 $('input.file').bind('change', function(evt) {
                     var elem = $(this);
-                    if (!elem.attr('type') == 'radio') {
-                        return;
+                    if (elem.attr('type') == 'radio') {
+                        return true;
                     }
                     $('input.file[value="replace"]').trigger('click');
                 });
                 $('input.image').bind('change', function(evt) {
                     var elem = $(this);
-                    if (!elem.attr('type') == 'radio') {
-                        return;
+                    if (elem.attr('type') == 'radio') {
+                        return true;
                     }
                     $('input.image[value="replace"]').trigger('click');
                 });

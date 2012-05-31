@@ -1,4 +1,5 @@
 import types
+import time
 from PIL import Image
 from imageutils.size import (
     scale,
@@ -31,7 +32,7 @@ def image_edit_renderer(widget, data):
         return data.rendered
     tag = data.tag
     img_attrs = {
-        'src': widget.attrs['src'],
+        'src': widget.attrs['src'] + '?nocache=%i' % time.time(),
         'alt': widget.attrs['alt'],
         'id': cssid(widget, 'image-preview'),
         'class': 'image-preview',
