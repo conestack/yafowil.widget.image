@@ -2,6 +2,15 @@
 History
 =======
 
+1.0.2dev
+--------
+
+- Adopt resource providing
+  [rnix, 2012-06-12]
+
+- Provide example widget
+  [rnix, 2012-06-12]
+
 1.0.1
 -----
 
