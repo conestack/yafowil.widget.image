@@ -44,5 +44,6 @@ setup(name='yafowil.widget.image',
       resourcedir = yafowil.widget.image:get_resource_dir
       javascripts = yafowil.widget.image:get_js
       stylesheets = yafowil.widget.image:get_css
+      example = yafowil.widget.image.example:get_example
       """,
       )
