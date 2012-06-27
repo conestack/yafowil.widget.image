@@ -41,9 +41,6 @@ setup(name='yafowil.widget.image',
       entry_points="""
       [yafowil.plugin]
       register = yafowil.widget.image:register
-      resourcedir = yafowil.widget.image:get_resource_dir
-      javascripts = yafowil.widget.image:get_js
-      stylesheets = yafowil.widget.image:get_css
       example = yafowil.widget.image.example:get_example
       """,
       )

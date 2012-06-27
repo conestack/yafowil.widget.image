@@ -20,19 +20,3 @@ def register():
     import widget
     factory.register_theme('default', 'yafowil.widget.image',
                            resourcedir, js=js, css=css)
-
-
-###############################################################################
-# XXX: outdated below
-###############################################################################
-
-def get_resource_dir():
-    return resourcedir
-
-
-def get_js():
-    return js
-
-
-def get_css():
-    return css
