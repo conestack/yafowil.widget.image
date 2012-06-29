@@ -28,11 +28,15 @@ from yafowil.common import (
 
 @managedprops('image', *css_managed_props)
 def image_edit_renderer(widget, data):
-    if not widget.attrs['src']:
+    src = widget.attrs['src']
+    if callable(src):
+        src = src(widget, data)
+    if not src:
         return data.rendered
+    src = src + '?nocache=%i' % time.time()
     tag = data.tag
     img_attrs = {
-        'src': widget.attrs['src'] + '?nocache=%i' % time.time(),
+        'src': src,
         'alt': widget.attrs['alt'],
         'id': cssid(widget, 'image-preview'),
         'class': 'image-preview',
@@ -66,6 +70,9 @@ def image_extractor(widget, data):
     if data.extracted and data.extracted['file']:
         data.extracted['image'] = Image.open(data.extracted['file'])
         data.extracted['file'].seek(0)
+    if data.extracted is UNSET:
+        # None means submitted but no upload
+        return None
     return data.extracted
 
 
@@ -184,8 +191,8 @@ def image_display_renderer(widget, data):
 factory.register(
     'image',
     extractors=[
-        generic_required_extractor,
         file_extractor,
+        generic_required_extractor,
         mimetype_extractor,
         image_extractor,
         size_extractor,
