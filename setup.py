@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import sys, os
 
-version = '2.0pre1'
+version = '1.1dev'
 shortdesc = 'Image Widget for YAFOWIL'
 longdesc = open(os.path.join(os.path.dirname(__file__), 'README.rst')).read()
 longdesc += open(os.path.join(os.path.dirname(__file__), 'HISTORY.rst')).read()
@@ -30,7 +30,7 @@ setup(name='yafowil.widget.image',
       zip_safe=False,
       install_requires=[
           'setuptools',
-          'yafowil',
+          'yafowil>=2.0',
           'ImageUtils',
       ],
       tests_require=tests_require,
