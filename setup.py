@@ -30,7 +30,7 @@ setup(name='yafowil.widget.image',
       zip_safe=False,
       install_requires=[
           'setuptools',
-          'yafowil>=2.0',
+          'yafowil>1.99',
           'ImageUtils',
       ],
       tests_require=tests_require,
