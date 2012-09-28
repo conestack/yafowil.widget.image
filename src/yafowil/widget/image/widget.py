@@ -25,7 +25,7 @@ from yafowil.common import (
 )
 
 
-@managedprops('image', *css_managed_props)
+@managedprops(*css_managed_props)
 def image_edit_renderer(widget, data):
     src = widget.attrs['src']
     if callable(src):
