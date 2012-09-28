@@ -2,7 +2,6 @@ import types
 import time
 from PIL import Image
 from imageutils.size import (
-    scale,
     scale_size,
     aspect_ratio_approximate,
     same_aspect_ratio,
@@ -132,8 +131,17 @@ def scales_extractor(widget, data):
         return data.extracted
     image = data.extracted['image']
     scaled_images = dict()
+    image_appr = aspect_ratio_approximate(image.size)
     for name, size in scales.items():
-        image_size = scale(size, image.size)
+        scale_appr = aspect_ratio_approximate(size)
+        if same_aspect_ratio(size, image.size):
+            image_size = size
+        # scale x
+        if image_appr < scale_appr:
+            image_size = scale_size(image.size, (size[0], None))
+        # scale y
+        if image_appr > scale_appr:
+            image_size = scale_size(image.size, (None, size[1]))
         scaled_images[name] = image.resize(image_size, Image.ANTIALIAS)
     data.extracted['scales'] = scaled_images
     return data.extracted

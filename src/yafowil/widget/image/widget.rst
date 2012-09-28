@@ -447,7 +447,7 @@ Scales Extraction
     'file': <StringIO.StringIO instance at ...>, 
     'scales': 
     {'micro': <PIL.Image.Image image mode=RGBA size=20x20 at ...>, 
-    'ratio': <PIL.Image.Image image mode=RGBA size=40x40 at ...>}}
+    'ratio': <PIL.Image.Image image mode=RGBA size=70x70 at ...>}}
     
     >>> for name, image in extracted['scales'].items():
     ...     path = pkg_resources.resource_filename(
