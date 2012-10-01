@@ -25,7 +25,7 @@ from yafowil.common import (
 )
 
 
-@managedprops(*css_managed_props)
+@managedprops('src', 'alt', *css_managed_props)
 def image_edit_renderer(widget, data):
     src = widget.attrs['src']
     if callable(src):
@@ -44,6 +44,7 @@ def image_edit_renderer(widget, data):
     return img + data.rendered
 
 
+@managedprops('accept')
 def mimetype_extractor(widget, data):
     """XXX: Move relevant parts to ``yafowil.common.mimetype_extractor``.
     """
@@ -75,6 +76,7 @@ def image_extractor(widget, data):
     return data.extracted
 
 
+@managedprops('minsize', 'maxsize')
 def size_extractor(widget, data):
     minsize = widget.attrs['minsize']
     maxsize = widget.attrs['maxsize']
@@ -100,6 +102,7 @@ def size_extractor(widget, data):
     return data.extracted
 
 
+@managedprops('mindpi', 'maxdpi')
 def dpi_extractor(widget, data):
     mindpi = widget.attrs['mindpi']
     maxdpi = widget.attrs['maxdpi']
@@ -125,6 +128,7 @@ def dpi_extractor(widget, data):
     return data.extracted
 
 
+@managedprops('scales')
 def scales_extractor(widget, data):
     scales = widget.attrs['scales']
     if not scales or not data.extracted or not data.extracted.get('image'):
@@ -137,16 +141,17 @@ def scales_extractor(widget, data):
         if same_aspect_ratio(size, image.size):
             image_size = size
         # scale x
-        if image_appr < scale_appr:
+        if image_appr > scale_appr:
             image_size = scale_size(image.size, (size[0], None))
         # scale y
-        if image_appr > scale_appr:
+        if image_appr < scale_appr:
             image_size = scale_size(image.size, (None, size[1]))
         scaled_images[name] = image.resize(image_size, Image.ANTIALIAS)
     data.extracted['scales'] = scaled_images
     return data.extracted
 
 
+@managedprops('crop')
 def crop_extractor(widget, data):
     """XXX:
     - support cropping definitions as request parameters.
@@ -185,15 +190,19 @@ def crop_extractor(widget, data):
     return data.extracted
 
 
+@managedprops('src', 'alt')
 def image_display_renderer(widget, data):
-    if widget.attrs['src']:
+    src = widget.attrs['src']
+    if src:
+        if callable(src):
+            src = src(widget, data)
         tag = data.tag
         img_attrs = {
-            'src': widget.attrs['src'],
+            'src': src,
             'alt': widget.attrs['alt'],
         }
         return tag('img', **img_attrs)
-    return data.rendered
+    return ''
 
 
 factory.register(

@@ -107,9 +107,56 @@ image above controls::
     </form>
     <BLANKLINE>
 
+Src property can be callable::
+
+    >>> form['image'].attrs['src'] = lambda w, d: 'http://www.example.com/otherimage.png'
+    >>> pxml(form())
+    <form action="myaction" enctype="multipart/form-data" id="form-myform" method="post" novalidate="novalidate">
+      <img alt="Alternative text" class="image-preview" id="image-preview-myform-image" src="http://www.example.com/otherimage.png?nocache=..."/>
+      <input accept="image/*" class="image" id="input-myform-image" name="myform.image" type="file"/>
+      <div id="radio-myform-image-keep">
+        <input checked="checked" class="image" id="input-myform-image-keep" name="myform.image-action" type="radio" value="keep"/>
+        <span>Keep Existing image</span>
+      </div>
+      <div id="radio-myform-image-replace">
+        <input class="image" id="input-myform-image-replace" name="myform.image-action" type="radio" value="replace"/>
+        <span>Replace existing image</span>
+      </div>
+      <div id="radio-myform-image-delete">
+        <input class="image" id="input-myform-image-delete" name="myform.image-action" type="radio" value="delete"/>
+        <span>Delete existing image</span>
+      </div>
+    </form>
+    <BLANKLINE>
+
+Render in display mode::
+
+    >>> form['image'].mode = 'display'
+    >>> pxml(form())
+    <form action="myaction" enctype="multipart/form-data" id="form-myform" method="post" novalidate="novalidate">
+      <img alt="Alternative text" src="http://www.example.com/otherimage.png"/>
+    </form>
+    <BLANKLINE>
+    
+    >>> form['image'].attrs['src'] = None
+    
+    >>> pxml(form())
+    <form action="myaction" enctype="multipart/form-data" id="form-myform" method="post" novalidate="novalidate"/>
+    <BLANKLINE>
+    
+    >>> form['image'].attrs['src'] = 'http://www.example.com/someimage.png'
+    
+    >>> form['image'].mode = 'edit'
+
 
 Base Extraction
 ---------------
+
+Extract empty (submitted but no upload)::
+
+    >>> request = {}
+    >>> data = form.extract(request)
+    >>> data['image'].extracted
 
 Extract ``new``::
 
@@ -190,7 +237,29 @@ Extract ``delete`` returns UNSET::
 Mimetype extraction
 -------------------
 
-Image ``accept`` must be of type ``image``::
+Image ``accept`` might be undefined::
+
+    >>> form['image'] = factory(
+    ...     'image',
+    ...     props={
+    ...         'accept': ''
+    ...     }
+    ... )
+    >>> request = {
+    ...     'myform.image': {
+    ...         'file': StringIO(dummy_jpg),
+    ...         'mimetype': 'image/jpg',
+    ...     },
+    ... }
+    >>> form.extract(request)
+    <RuntimeData myform, value=<UNSET>, 
+    extracted=odict([('image', 
+    {'mimetype': 'image/jpg', 
+    'action': 'new', 
+    'image': <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=50x50 at ...>, 
+    'file': <StringIO.StringIO instance at ...>})]) at ...>
+
+or must be of type ``image``::
 
     >>> form['image'] = factory(
     ...     'image',
@@ -220,6 +289,19 @@ Explicit image type::
     >>> data = form.extract(request)
     >>> data['image'].errors
     [ExtractionError('Uploaded image not of type png',)]
+    
+    >>> form['image'] = factory(
+    ...     'image',
+    ...     props={
+    ...         'accept': 'image/jpg'
+    ...     }
+    ... )
+    >>> form.extract(request)
+    <RuntimeData myform, value=<UNSET>, extracted=odict([('image', 
+    {'mimetype': 'image/jpg', 
+    'action': 'new', 
+    'image': <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=50x50 at ...>, 
+    'file': <StringIO.StringIO instance at ...>})]) at ...>
 
 Uploded file not an image::
 
@@ -428,7 +510,8 @@ Scales Extraction
     ...     props={
     ...         'scales': {
     ...             'micro': (20, 20),
-    ...             'ratio': (70, 40),
+    ...             'landscape': (70, 40),
+    ...             'portrait': (40, 70),
     ...         },
     ...     }
     ... )
@@ -447,7 +530,8 @@ Scales Extraction
     'file': <StringIO.StringIO instance at ...>, 
     'scales': 
     {'micro': <PIL.Image.Image image mode=RGBA size=20x20 at ...>, 
-    'ratio': <PIL.Image.Image image mode=RGBA size=70x70 at ...>}}
+    'landscape': <PIL.Image.Image image mode=RGBA size=40x40 at ...>, 
+    'portrait': <PIL.Image.Image image mode=RGBA size=40x40 at ...>}}
     
     >>> for name, image in extracted['scales'].items():
     ...     path = pkg_resources.resource_filename(
