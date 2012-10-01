@@ -87,8 +87,8 @@ Create widget.
     form['image'] = factory('#field:image', value=image_value, props={
         'label': 'Image',
         'required': 'No Image uploaded',
-        'maxsize': (1680, 1050),
-        'scales': {'default': (300, 300)},
+        'maxsize': (1024, 768),
+        'scales': {'default': (400, 400)},
         'src': image_name,
         'error.class': 'help-block'})
 """
@@ -111,7 +111,7 @@ def image():
     form['image'] = factory('#field:image', value=get_value, props={
         'label': 'Image',
         'required': 'No Image uploaded',
-        'maxsize': (800, 600),
+        'maxsize': (1024, 768),
         'scales': {'default': (400, 400)},
         'src': get_src,
         'error.class': 'help-block'})
