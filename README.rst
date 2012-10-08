@@ -1,6 +1,9 @@
 This is an **image widget** for for `YAFOWIL
 <http://pypi.python.org/pypi/yafowil>`_ .
 
+- `Documentation <http://docs.yafowil.info/yafowil/blueprints.html#image>`_
+- `DEMO - see it Live <http://demo.yafowil.info/++widget++yafowil.widget.image/index.html>`_
+
 
 Source Code
 ===========
