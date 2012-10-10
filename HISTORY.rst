@@ -2,8 +2,8 @@
 History
 =======
 
-1.1dev
-------
+1.1
+---
 
 - Adopt resource providing
   [rnix, 2012-06-12]

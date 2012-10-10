@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import sys, os
 
-version = '1.1dev'
+version = '1.1'
 shortdesc = 'Image Widget for YAFOWIL'
 longdesc = open(os.path.join(os.path.dirname(__file__), 'README.rst')).read()
 longdesc += open(os.path.join(os.path.dirname(__file__), 'HISTORY.rst')).read()
@@ -22,6 +22,7 @@ setup(name='yafowil.widget.image',
       keywords='',
       author='BlueDynamics Alliance',
       author_email='dev@bluedynamics.com',
+      url="http://pypi.python.org/pypi/yafowil.widget.image",
       license='Simplified BSD',
       packages=find_packages('src'),
       package_dir = {'': 'src'},
