@@ -2,6 +2,12 @@
 History
 =======
 
+1.1.1dev
+--------
+
+- use ``yafowil.utils.attr_value`` wherever possible.
+  [rnix, 2012-10-25]
+
 1.1
 ---
 

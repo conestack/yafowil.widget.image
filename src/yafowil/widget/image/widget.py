@@ -16,6 +16,7 @@ from yafowil.utils import (
     cssid,
     css_managed_props,
     managedprops,
+    attr_value,
 )
 from yafowil.common import (
     generic_required_extractor,
@@ -27,16 +28,14 @@ from yafowil.common import (
 
 @managedprops('src', 'alt', *css_managed_props)
 def image_edit_renderer(widget, data):
-    src = widget.attrs['src']
-    if callable(src):
-        src = src(widget, data)
+    src = attr_value('src', widget, data)
     if not src:
         return data.rendered
     src = src + '?nocache=%i' % time.time()
     tag = data.tag
     img_attrs = {
         'src': src,
-        'alt': widget.attrs['alt'],
+        'alt': attr_value('alt', widget, data),
         'id': cssid(widget, 'image-preview'),
         'class': 'image-preview',
     }
@@ -48,7 +47,7 @@ def image_edit_renderer(widget, data):
 def mimetype_extractor(widget, data):
     """XXX: Move relevant parts to ``yafowil.common.mimetype_extractor``.
     """
-    accept = widget.attrs['accept']
+    accept = attr_value('accept', widget, data)
     if not data.extracted or not accept:
         return data.extracted
     if not accept.startswith('image'):
@@ -78,8 +77,8 @@ def image_extractor(widget, data):
 
 @managedprops('minsize', 'maxsize')
 def size_extractor(widget, data):
-    minsize = widget.attrs['minsize']
-    maxsize = widget.attrs['maxsize']
+    minsize = attr_value('minsize', widget, data)
+    maxsize = attr_value('maxsize', widget, data)
     if not minsize and not maxsize:
         return data.extracted
     if data.extracted and data.extracted.get('image'):
@@ -104,8 +103,8 @@ def size_extractor(widget, data):
 
 @managedprops('mindpi', 'maxdpi')
 def dpi_extractor(widget, data):
-    mindpi = widget.attrs['mindpi']
-    maxdpi = widget.attrs['maxdpi']
+    mindpi = attr_value('mindpi', widget, data)
+    maxdpi = attr_value('maxdpi', widget, data)
     if not mindpi and not maxdpi:
         return data.extracted
     if data.extracted and data.extracted.get('image'):
@@ -130,7 +129,7 @@ def dpi_extractor(widget, data):
 
 @managedprops('scales')
 def scales_extractor(widget, data):
-    scales = widget.attrs['scales']
+    scales = attr_value('scales', widget, data)
     if not scales or not data.extracted or not data.extracted.get('image'):
         return data.extracted
     image = data.extracted['image']
@@ -161,7 +160,7 @@ def crop_extractor(widget, data):
         br (bottom right), ce (center), rc (right center),
         lc (left center), tc (top center), bc (bottom center)
     """
-    crop = widget.attrs['crop']
+    crop = attr_value('crop', widget, data)
     if not crop or not data.extracted or not data.extracted.get('image'):
         return data.extracted
     size = crop['size']
@@ -192,14 +191,12 @@ def crop_extractor(widget, data):
 
 @managedprops('src', 'alt')
 def image_display_renderer(widget, data):
-    src = widget.attrs['src']
+    src = attr_value('src', widget, data)
     if src:
-        if callable(src):
-            src = src(widget, data)
         tag = data.tag
         img_attrs = {
             'src': src,
-            'alt': widget.attrs['alt'],
+            'alt': attr_value('alt', widget, data),
         }
         return tag('img', **img_attrs)
     return ''
