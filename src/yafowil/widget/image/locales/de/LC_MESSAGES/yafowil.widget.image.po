@@ -1,0 +1,63 @@
+# German translations for yafowil.widget.image.
+# Copyright (C) 2014 ORGANIZATION
+# This file is distributed under the same license as the
+# yafowil.widget.image
+# project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: yafowil.widget.image 1.2dev\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2014-04-30 19:35+0200\n"
+"PO-Revision-Date: 2014-04-30 19:31+0200\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: de <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 1.3\n"
+
+#. Default: Uploaded file is not an image.
+#: src/yafowil/widget/image/widget.py:61
+msgid "file_not_an_image"
+msgstr "Datei ist kein Bild"
+
+#. Default: Uploaded image not of type ${type}
+#: src/yafowil/widget/image/widget.py:67
+msgid "file_invalid_type"
+msgstr "Datei ist nich vom Typ ${type}"
+
+#. Default: Image must have a size of ${width} x ${height} pixel
+#: src/yafowil/widget/image/widget.py:97
+msgid "exact_image_size_required"
+msgstr "Bild muss ${width} x ${height} Pixel groß sein"
+
+#. Default: Image must have a minimum size of ${width} x ${height} pixel
+#: src/yafowil/widget/image/widget.py:107
+msgid "minimum_image_size_required"
+msgstr "Bild muss mindestens ${width} x ${height} Pixel groß sein"
+
+#. Default: Image must have a maximum size of ${width} x ${height} pixel
+#: src/yafowil/widget/image/widget.py:117
+msgid "maximum_image_size_required"
+msgstr "Bild darf maximal ${width} x ${height} Pixel groß sein"
+
+#. Default: Image must have a resolution of ${width} x ${height} DPI
+#: src/yafowil/widget/image/widget.py:138
+msgid "exact_image_dpi_required"
+msgstr "Bild muss eine Druckauflösung von ${width} x ${height} DPI haben"
+
+#. Default: Image must have at least ${width} x ${height} DPI
+#: src/yafowil/widget/image/widget.py:148
+msgid "minimum_image_dpi_required"
+msgstr ""
+"Bild muss mindestens eine Druckauflösung von ${width} x ${height} DPI "
+"haben"
+
+#. Default: Image must have a maximum of ${width} x ${height} DPI
+#: src/yafowil/widget/image/widget.py:158
+msgid "maximum_image_dpi_required"
+msgstr "Bild darf maximal eine Druckauflösung von ${width} x ${height} DPI haben"
+

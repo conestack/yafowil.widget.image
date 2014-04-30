@@ -18,12 +18,16 @@ from yafowil.utils import (
     managedprops,
     attr_value,
 )
+from yafowil.tsf import TSF
 from yafowil.common import (
     generic_required_extractor,
     file_extractor,
     input_file_edit_renderer,
     file_options_renderer,
 )
+
+
+_ = TSF('yafowil.widget.dict')
 
 
 @managedprops('src', 'alt', *css_managed_props)
@@ -54,11 +58,16 @@ def mimetype_extractor(widget, data):
         raise ValueError(u"Incompatible mimetype %s" % accept)
     mimetype = data.extracted['mimetype']
     if not mimetype.startswith('image'):
-        raise ExtractionError(u"Uploaded file is not an image.")
+        message = _('file_not_an_image',
+                    default=u'Uploaded file is not an image.')
+        raise ExtractionError(message)
     if accept[6:] == '*':
         return data.extracted
     if accept != mimetype:
-        raise ExtractionError(u"Uploaded image not of type %s" % accept[6:])
+        message = _('file_invalid_type',
+                    default=u'Uploaded image not of type ${type}',
+                    mapping={'type': accept[6:]})
+        raise ExtractionError(message)
     return data.extracted
 
 
@@ -85,19 +94,34 @@ def size_extractor(widget, data):
         size = data.extracted['image'].size
         if minsize == maxsize:
             if size[0] != minsize[0] or size[1] != minsize[1]:
-                raise ExtractionError(
-                    u"Image must have a size of %s x %s pixel" % \
-                        (minsize[0], minsize[1]))
+                message = _('exact_image_size_required',
+                            default=u'Image must have a size of '
+                                    u'${width} x ${height} pixel',
+                            mapping={
+                                'width': minsize[0],
+                                'height': minsize[1],
+                            })
+                raise ExtractionError(message)
         if minsize:
             if size[0] < minsize[0] or size[1] < minsize[1]:
-                raise ExtractionError(
-                    u"Image must have a minimum size of %s x %s pixel" % \
-                        (minsize[0], minsize[1]))
+                message = _('minimum_image_size_required',
+                            default=u'Image must have a minimum size of '
+                                    u'${width} x ${height} pixel',
+                            mapping={
+                                'width': minsize[0],
+                                'height': minsize[1],
+                            })
+                raise ExtractionError(message)
         if maxsize:
             if size[0] > maxsize[0] or size[1] > maxsize[1]:
-                raise ExtractionError(
-                    u"Image must have a maximum size of %s x %s pixel" % \
-                        (maxsize[0], maxsize[1]))
+                message = _('maximum_image_size_required',
+                            default=u'Image must have a maximum size of '
+                                    u'${width} x ${height} pixel',
+                            mapping={
+                                'width': maxsize[0],
+                                'height': maxsize[1],
+                            })
+                raise ExtractionError(message)
     return data.extracted
 
 
@@ -111,19 +135,34 @@ def dpi_extractor(widget, data):
         dpi = data.extracted['image'].info['dpi']
         if mindpi == maxdpi:
             if dpi[0] != mindpi[0] or dpi[1] != mindpi[1]:
-                raise ExtractionError(
-                    u"Image must have a resolution of %s x %s DPI" % \
-                        (mindpi[0], mindpi[1]))
+                message = _('exact_image_dpi_required',
+                            default=u'Image must have a resolution of '
+                                    u'${width} x ${height} DPI',
+                            mapping={
+                                'width': mindpi[0],
+                                'height': mindpi[1],
+                            })
+                raise ExtractionError(message)
         if mindpi:
             if dpi[0] < mindpi[0] or dpi[1] < mindpi[1]:
-                raise ExtractionError(
-                    u"Image must have at least %s x %s DPI" % \
-                        (mindpi[0], mindpi[1]))
+                message = _('minimum_image_dpi_required',
+                            default=u'Image must have at least '
+                                    u'${width} x ${height} DPI',
+                            mapping={
+                                'width': mindpi[0],
+                                'height': mindpi[1],
+                            })
+                raise ExtractionError(message)
         if maxdpi:
             if dpi[0] > maxdpi[0] or dpi[1] > maxdpi[1]:
-                raise ExtractionError(
-                    u"Image must have a maximum of %s x %s DPI" % \
-                        (maxdpi[0], maxdpi[1]))
+                message = _('maximum_image_dpi_required',
+                            default=u'Image must have a maximum of '
+                                    u'${width} x ${height} DPI',
+                            mapping={
+                                'width': maxdpi[0],
+                                'height': maxdpi[1],
+                            })
+                raise ExtractionError(message)
     return data.extracted
 
 
