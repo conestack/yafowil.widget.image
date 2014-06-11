@@ -5,7 +5,7 @@ from setuptools import (
 )
 
 
-version = '1.2pre1'
+version = '1.2'
 shortdesc = 'Image Widget for YAFOWIL'
 longdesc = open(os.path.join(os.path.dirname(__file__), 'README.rst')).read()
 longdesc += open(os.path.join(os.path.dirname(__file__), 'HISTORY.rst')).read()
