@@ -5,7 +5,9 @@ History
 1.3.dev0
 --------
 
-- No changes yet.
+- Check for already existing query parameters befor adding nocache param to
+  img src.
+  [rnix, 2014-07-11]
 
 1.2
 ---

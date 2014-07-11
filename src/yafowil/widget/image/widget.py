@@ -35,7 +35,10 @@ def image_edit_renderer(widget, data):
     src = attr_value('src', widget, data)
     if not src:
         return data.rendered
-    src = src + '?nocache=%i' % time.time()
+    if src.find('?') > -1:
+        src = src + '&nocache=%i' % time.time()
+    else:
+        src = src + '?nocache=%i' % time.time()
     tag = data.tag
     img_attrs = {
         'src': src,
