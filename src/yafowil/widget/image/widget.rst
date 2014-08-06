@@ -19,15 +19,15 @@ Provide testing dummy files::
     ...     with open(path) as file:
     ...         data = file.read()
     ...     return data
-    
+
     >>> dummy_png = dummy_file_data('dummy.png')
     >>> dummy_png
     "\x89PNG\r\n...\x00IEND\xaeB`\x82"
-    
+
     >>> dummy_jpg = dummy_file_data('dummy.jpg')
     >>> dummy_jpg
     '\xff\xd8\xff\xe0\x00\x10JFIF\...\xff\xd9'
-    
+
     >>> dummy_pdf = dummy_file_data('dummy.pdf')
     >>> dummy_pdf
     '%PDF-1.5\n%\...\n956\n%%EOF\n'
@@ -137,15 +137,15 @@ Render in display mode::
       <img alt="Alternative text" src="http://www.example.com/otherimage.png"/>
     </form>
     <BLANKLINE>
-    
+
     >>> form['image'].attrs['src'] = None
-    
+
     >>> pxml(form())
     <form action="myaction" enctype="multipart/form-data" id="form-myform" method="post" novalidate="novalidate"/>
     <BLANKLINE>
-    
+
     >>> form['image'].attrs['src'] = 'http://www.example.com/someimage.png'
-    
+
     >>> form['image'].mode = 'edit'
 
 
@@ -191,7 +191,7 @@ Extract ``keep`` returns original value::
     'action': 'keep', 
     'image': <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>, 
     'file': <StringIO.StringIO instance at ...>}
-    
+
     >>> data['image'].errors
     []
 
@@ -207,16 +207,16 @@ Extract ``replace`` returns new value::
     'action': 'replace', 
     'image': <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>, 
     'file': <StringIO.StringIO instance at ...>}
-    
+
     >>> data['image'].extracted
     {'mimetype': 'image/jpg', 
     'action': 'replace', 
     'image': <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=50x50 at ...>, 
     'file': <StringIO.StringIO instance at ...>}
-    
+
     >>> data['image'].extracted['file'].read()
     '\xff\xd8\xff\xe0\x00\x10JFIF\...\xff\xd9'
-    
+
     >>> data['image'].errors
     []
 
@@ -229,7 +229,7 @@ Extract ``delete`` returns UNSET::
     'action': 'delete', 
     'image': <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>, 
     'file': <UNSET>}
-    
+
     >>> data['image'].errors
     []
 
@@ -289,7 +289,7 @@ Explicit image type::
     >>> data = form.extract(request)
     >>> data['image'].errors
     [ExtractionError('Uploaded image not of type png',)]
-    
+
     >>> form['image'] = factory(
     ...     'image',
     ...     props={
@@ -324,11 +324,11 @@ Size extraction
     >>> image = PIL.Image.open(buffer)
     >>> image
     <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>
-    
+
     >>> buffer.seek(0)
     >>> buffer.read()
     "\x89PNG\r\n...\x00IEND\xaeB`\x82"
-    
+
     >>> image.size
     (50, 50)
 
@@ -349,7 +349,7 @@ Minsize::
     >>> data = form.extract(request)
     >>> data['image'].errors
     [ExtractionError('Image must have a minimum size of 60 x 60 pixel',)]
-    
+
     >>> form['image'] = factory(
     ...     'image',
     ...     props={
@@ -371,7 +371,7 @@ Maxsize::
     >>> data = form.extract(request)
     >>> data['image'].errors
     [ExtractionError('Image must have a maximum size of 40 x 40 pixel',)]
-    
+
     >>> form['image'] = factory(
     ...     'image',
     ...     props={
@@ -394,7 +394,7 @@ Exact size::
     >>> data = form.extract(request)
     >>> data['image'].errors
     [ExtractionError('Image must have a size of 40 x 40 pixel',)]
-    
+
     >>> form['image'] = factory(
     ...     'image',
     ...     props={
@@ -431,7 +431,7 @@ Minimum DPI::
     >>> data = form.extract(request)
     >>> data['image'].errors
     [ExtractionError('Image must have at least 80 x 80 DPI',)]
-    
+
     >>> form['image'] = factory(
     ...     'image',
     ...     props={
@@ -459,7 +459,7 @@ Maximum DPI::
     >>> data = form.extract(request)
     >>> data['image'].errors
     [ExtractionError('Image must have a maximum of 60 x 60 DPI',)]
-    
+
     >>> form['image'] = factory(
     ...     'image',
     ...     props={
@@ -488,7 +488,7 @@ Exact DPI::
     >>> data = form.extract(request)
     >>> data['image'].errors
     [ExtractionError('Image must have a resolution of 60 x 60 DPI',)]
-    
+
     >>> form['image'] = factory(
     ...     'image',
     ...     props={
@@ -532,7 +532,7 @@ Scales Extraction
     {'micro': <PIL.Image.Image image mode=RGBA size=20x20 at ...>, 
     'landscape': <PIL.Image.Image image mode=RGBA size=40x40 at ...>, 
     'portrait': <PIL.Image.Image image mode=RGBA size=40x40 at ...>}}
-    
+
     >>> for name, image in extracted['scales'].items():
     ...     path = pkg_resources.resource_filename(
     ...         'yafowil.widget.image', 'testing/%s.png' % name)
@@ -586,17 +586,17 @@ scale x::
     >>> size_to = (50, 25)
     >>> aspect_ratio_approximate(size_from)
     Decimal('1.50')
-    
+
     >>> aspect_ratio_approximate(size_to)
     Decimal('2.00')
-    
+
     >>> aspect_ratio_approximate(size_from) < aspect_ratio_approximate(size_to)
     True
-    
+
     >>> scaled = scale_size(size_from, (size_to[0], None))
     >>> scaled
     (50, 33)
-    
+
     >>> offset_y = (scaled[1] - size_to[1]) / 2
     >>> offset_y
     4
@@ -607,17 +607,17 @@ scale y::
     >>> size_to = (50, 35)
     >>> aspect_ratio_approximate(size_from)
     Decimal('1.50')
-    
+
     >>> aspect_ratio_approximate(size_to)
     Decimal('1.43')
 
     >>> aspect_ratio_approximate(size_from) > aspect_ratio_approximate(size_to)
     True
-    
+
     >>> scaled = scale_size(size_from, (None, size_to[1]))
     >>> scaled
     (52, 35)
-    
+
     >>> offset_x = (scaled[0] - size_to[0]) / 2
     >>> offset_x
     1
@@ -646,7 +646,7 @@ Crop as is without offset, size (20, 20)::
     'image': <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>, 
     'cropped': <PIL.Image._ImageCrop image mode=RGBA size=20x20 at ...>, 
     'file': <StringIO.StringIO instance at ...>}
-    
+
     >>> path = pkg_resources.resource_filename(
     ...     'yafowil.widget.image', 'testing/crop_size_20_20.png')
     >>> extracted['cropped'].save(path, quality=100)
@@ -675,7 +675,7 @@ Crop as is without offset, size (40, 20)::
     'image': <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>, 
     'cropped': <PIL.Image._ImageCrop image mode=RGBA size=40x20 at ...>, 
     'file': <StringIO.StringIO instance at ...>}
-    
+
     >>> path = pkg_resources.resource_filename(
     ...     'yafowil.widget.image', 'testing/crop_size_40_20.png')
     >>> extracted['cropped'].save(path, quality=100)
@@ -704,7 +704,7 @@ Crop as is without offset, size (20, 40)::
     'image': <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>, 
     'cropped': <PIL.Image._ImageCrop image mode=RGBA size=20x40 at ...>, 
     'file': <StringIO.StringIO instance at ...>}
-    
+
     >>> path = pkg_resources.resource_filename(
     ...     'yafowil.widget.image', 'testing/crop_size_20_40.png')
     >>> extracted['cropped'].save(path, quality=100)
@@ -734,7 +734,7 @@ Crop with offset (5, 3), size (20, 40)::
     'image': <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>, 
     'cropped': <PIL.Image._ImageCrop image mode=RGBA size=20x40 at ...>, 
     'file': <StringIO.StringIO instance at ...>}
-    
+
     >>> path = pkg_resources.resource_filename(
     ...     'yafowil.widget.image', 'testing/crop_size_20_40_offset_5_3.png')
     >>> extracted['cropped'].save(path, quality=100)
@@ -764,7 +764,7 @@ Crop with offset (5, 0), size (50, 20) -> x overflow::
     'image': <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>, 
     'cropped': <PIL.Image._ImageCrop image mode=RGBA size=50x20 at ...>, 
     'file': <StringIO.StringIO instance at ...>}
-    
+
     >>> path = pkg_resources.resource_filename(
     ...     'yafowil.widget.image', 'testing/crop_size_50_20_offset_5_0.png')
     >>> extracted['cropped'].save(path, quality=100)
@@ -774,7 +774,7 @@ Crop fitting::
     >>> dummy_40_20_png = dummy_file_data('crop_size_40_20.png')
     >>> dummy_40_20_png
     '\x89PNG\r\n\...\x00IEND\xaeB`\x82'
-    
+
     >>> dummy_20_40_png = dummy_file_data('crop_size_20_40.png')
     >>> dummy_20_40_png
     '\x89PNG\r\n\...\x00IEND\xaeB`\x82'
@@ -804,7 +804,7 @@ Crop fitting from lanscape, size (30, 18)::
     'image': <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=40x20 at ...>, 
     'cropped': <PIL.Image._ImageCrop image mode=RGBA size=30x18 at ...>, 
     'file': <StringIO.StringIO instance at ...>}
-    
+
     >>> path = pkg_resources.resource_filename(
     ...     'yafowil.widget.image', 'testing/crop_fitting_ls_30_18.png')
     >>> extracted['cropped'].save(path, quality=100)
@@ -834,7 +834,7 @@ Crop fitting from landscape, size (18, 30)::
     'image': <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=40x20 at ...>, 
     'cropped': <PIL.Image._ImageCrop image mode=RGBA size=18x30 at ...>, 
     'file': <StringIO.StringIO instance at ...>}
-    
+
     >>> path = pkg_resources.resource_filename(
     ...     'yafowil.widget.image', 'testing/crop_fitting_ls_18_30.png')
     >>> extracted['cropped'].save(path, quality=100)
@@ -864,7 +864,7 @@ Crop fitting from portrait, size (30, 18)::
     'image': <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=20x40 at ...>, 
     'cropped': <PIL.Image._ImageCrop image mode=RGBA size=30x18 at ...>, 
     'file': <StringIO.StringIO instance at ...>}
-    
+
     >>> path = pkg_resources.resource_filename(
     ...     'yafowil.widget.image', 'testing/crop_fitting_pt_30_18.png')
     >>> extracted['cropped'].save(path, quality=100)
@@ -894,7 +894,7 @@ Crop fitting from portrait, size (18, 30)::
     'image': <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=20x40 at ...>, 
     'cropped': <PIL.Image._ImageCrop image mode=RGBA size=18x30 at ...>, 
     'file': <StringIO.StringIO instance at ...>}
-    
+
     >>> path = pkg_resources.resource_filename(
     ...     'yafowil.widget.image', 'testing/crop_fitting_pt_18_30.png')
     >>> extracted['cropped'].save(path, quality=100)
@@ -924,7 +924,7 @@ Crop fitting square -> thus also same ratio::
     'image': <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>, 
     'cropped': <PIL.Image._ImageCrop image mode=RGBA size=30x30 at ...>, 
     'file': <StringIO.StringIO instance at ...>}
-    
+
     >>> path = pkg_resources.resource_filename(
     ...     'yafowil.widget.image', 'testing/crop_fitting_sq_30_30.png')
     >>> extracted['cropped'].save(path, quality=100)
@@ -954,7 +954,7 @@ Crop fitting portrait from square::
     'image': <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>, 
     'cropped': <PIL.Image._ImageCrop image mode=RGBA size=40x50 at ...>, 
     'file': <StringIO.StringIO instance at ...>}
-    
+
     >>> path = pkg_resources.resource_filename(
     ...     'yafowil.widget.image', 'testing/crop_fitting_sq_40_50.png')
     >>> extracted['cropped'].save(path, quality=100)
@@ -984,7 +984,7 @@ Crop fitting lanscape from square::
     'image': <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>, 
     'cropped': <PIL.Image._ImageCrop image mode=RGBA size=48x40 at ...>, 
     'file': <StringIO.StringIO instance at ...>}
-    
+
     >>> path = pkg_resources.resource_filename(
     ...     'yafowil.widget.image', 'testing/crop_fitting_sq_48_40.png')
     >>> extracted['cropped'].save(path, quality=100)
@@ -1002,4 +1002,3 @@ Save either by filename or file descriptor::
     >>> out.seek(0)
     >>> out.read()
     "\x89PNG\r\n\...\x00IEND\xaeB`\x82"
-    

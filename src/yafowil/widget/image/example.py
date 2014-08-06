@@ -81,8 +81,10 @@ Create widget.
     image_value = UNSET
     if os.path.exists(image_path):
         image_data = read_image(name)
-        image_value = {'file': StringIO(image_data),
-                       'mimetype': 'image/jpg'}
+        image_value = {
+            'file': StringIO(image_data),
+            'mimetype': 'image/jpg',
+        }
     form = factory('fieldset', name=name)
     form['image'] = factory('#field:image', value=image_value, props={
         'label': 'Image',
@@ -90,7 +92,8 @@ Create widget.
         'maxsize': (1024, 768),
         'scales': {'default': (400, 400)},
         'src': image_name,
-        'error.class': 'help-block'})
+        'error.class': 'help-block',
+    })
 """
 
 def image():
@@ -101,8 +104,10 @@ def image():
         image_value = UNSET
         if os.path.exists(image_path):
             image_data = read_image(name)
-            image_value = {'file': StringIO(image_data),
-                           'mimetype': 'image/jpg'}
+            image_value = {
+                'file': StringIO(image_data),
+                'mimetype': 'image/jpg',
+            }
         return image_value
     def get_src(widget, data):
         if os.path.exists(image_path):
@@ -114,12 +119,17 @@ def image():
         'maxsize': (1024, 768),
         'scales': {'default': (400, 400)},
         'src': get_src,
-        'error.class': 'help-block'})
-    return {'widget': form,
-            'doc': DOC_IMAGE,
-            'title': 'Image',
-            'handler': save_image,
-            'routes': {image_name: image_response}}
+        'error.class': 'help-block',
+    })
+    return {
+        'widget': form,
+        'doc': DOC_IMAGE,
+        'title': 'Image',
+        'handler': save_image,
+        'routes': {
+            image_name: image_response,
+        },
+    }
 
 
 def get_example():
