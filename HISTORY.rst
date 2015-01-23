@@ -2,7 +2,7 @@
 History
 =======
 
-1.3 (unreleased)
+1.3 (2015-01-23)
 ----------------
 
 - Add top margin to input.
