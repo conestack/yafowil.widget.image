@@ -1,30 +1,22 @@
-import types
-import time
 from PIL import Image
-from imageutils.size import (
-    scale_size,
-    aspect_ratio_approximate,
-    same_aspect_ratio,
-)
-from yafowil.base import (
-    UNSET,
-    factory,
-    fetch_value,
-    ExtractionError,
-)
-from yafowil.utils import (
-    cssid,
-    css_managed_props,
-    managedprops,
-    attr_value,
-)
+from imageutils.size import aspect_ratio_approximate
+from imageutils.size import same_aspect_ratio
+from imageutils.size import scale_size
+from node.utils import UNSET
+from yafowil.base import ExtractionError
+from yafowil.base import factory
+from yafowil.base import fetch_value
+from yafowil.common import file_extractor
+from yafowil.common import file_options_renderer
+from yafowil.common import generic_required_extractor
+from yafowil.common import input_file_edit_renderer
 from yafowil.tsf import TSF
-from yafowil.common import (
-    generic_required_extractor,
-    file_extractor,
-    input_file_edit_renderer,
-    file_options_renderer,
-)
+from yafowil.utils import attr_value
+from yafowil.utils import css_managed_props
+from yafowil.utils import cssid
+from yafowil.utils import managedprops
+import time
+import types
 
 
 _ = TSF('yafowil.widget.dict')

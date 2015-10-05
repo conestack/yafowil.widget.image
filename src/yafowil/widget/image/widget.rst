@@ -552,11 +552,10 @@ Cropping logic::
 
 Fitting logic::
 
-    >>> from imageutils.size import (
-    ...     same_aspect_ratio,
-    ...     aspect_ratio_approximate,
-    ...     scale_size,
-    ... )
+    >>> from imageutils.size import same_aspect_ratio
+    >>> from imageutils.size import aspect_ratio_approximate
+    >>> from imageutils.size import scale_size
+
     >>> same_aspect_ratio((300, 200), (600, 400))
     True
 

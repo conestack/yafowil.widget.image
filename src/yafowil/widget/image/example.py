@@ -1,10 +1,8 @@
+from StringIO import StringIO
+from node.utils import UNSET
+from yafowil.base import factory
 import os
 import urlparse
-from StringIO import StringIO
-from yafowil.base import (
-    factory,
-    UNSET,
-)
 
 
 # container for images during runtime.
