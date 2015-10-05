@@ -2,6 +2,14 @@
 History
 =======
 
+1.3.1 (unreleased)
+------------------
+
+- Use ``&amp;`` instead of ``&`` for parameter separation in
+  ``image_edit_renderer`` if image URL already contains GET parameters.
+  [rnix, 2015-10-05]
+
+
 1.3 (2015-01-23)
 ----------------
 

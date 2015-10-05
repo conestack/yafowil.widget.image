@@ -107,6 +107,37 @@ image above controls::
     </form>
     <BLANKLINE>
 
+Src property may contain get parameters::
+
+    >>> form['image'] = factory(
+    ...     'image',
+    ...     value={
+    ...         'file': StringIO(dummy_png),
+    ...         'mimetype': 'image/png',
+    ...     },
+    ...     props={
+    ...         'src': 'http://www.example.com/someimage?format=png',
+    ...         'alt': 'Alternative text',
+    ...     })
+    >>> pxml(form())
+    <form action="myaction" enctype="multipart/form-data" id="form-myform" method="post" novalidate="novalidate">
+      <img alt="Alternative text" class="image-preview" id="image-preview-myform-image" src="http://www.example.com/someimage?format=png&amp;nocache=..."/>
+      <input accept="image/*" class="image" id="input-myform-image" name="myform.image" type="file"/>
+      <div id="radio-myform-image-keep">
+        <input checked="checked" class="image" id="input-myform-image-keep" name="myform.image-action" type="radio" value="keep"/>
+        <span>Keep Existing image</span>
+      </div>
+      <div id="radio-myform-image-replace">
+        <input class="image" id="input-myform-image-replace" name="myform.image-action" type="radio" value="replace"/>
+        <span>Replace existing image</span>
+      </div>
+      <div id="radio-myform-image-delete">
+        <input class="image" id="input-myform-image-delete" name="myform.image-action" type="radio" value="delete"/>
+        <span>Delete existing image</span>
+      </div>
+    </form>
+    <BLANKLINE>
+
 Src property can be callable::
 
     >>> form['image'].attrs['src'] = lambda w, d: 'http://www.example.com/otherimage.png'
