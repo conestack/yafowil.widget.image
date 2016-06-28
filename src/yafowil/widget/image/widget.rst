@@ -583,9 +583,9 @@ Cropping logic::
 
 Fitting logic::
 
-    >>> from imageutils.size import same_aspect_ratio
-    >>> from imageutils.size import aspect_ratio_approximate
-    >>> from imageutils.size import scale_size
+    >>> from yafowil.widget.image.utils import same_aspect_ratio
+    >>> from yafowil.widget.image.utils import aspect_ratio_approximate
+    >>> from yafowil.widget.image.utils import scale_size
 
     >>> same_aspect_ratio((300, 200), (600, 400))
     True

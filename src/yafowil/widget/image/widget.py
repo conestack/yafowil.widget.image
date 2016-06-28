@@ -1,7 +1,4 @@
 from PIL import Image
-from imageutils.size import aspect_ratio_approximate
-from imageutils.size import same_aspect_ratio
-from imageutils.size import scale_size
 from node.utils import UNSET
 from yafowil.base import ExtractionError
 from yafowil.base import factory
@@ -15,6 +12,9 @@ from yafowil.utils import attr_value
 from yafowil.utils import css_managed_props
 from yafowil.utils import cssid
 from yafowil.utils import managedprops
+from yafowil.widget.image.utils import aspect_ratio_approximate
+from yafowil.widget.image.utils import same_aspect_ratio
+from yafowil.widget.image.utils import scale_size
 import time
 import types
 

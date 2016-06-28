@@ -2,8 +2,11 @@
 History
 =======
 
-1.3.1 (unreleased)
-------------------
+1.4 (unreleased)
+----------------
+
+- Copy over used functions from ``ImageUtils`` package and drop dependency.
+  [rnix, 2016-06-28]
 
 - Use ``&amp;`` instead of ``&`` for parameter separation in
   ``image_edit_renderer`` if image URL already contains GET parameters.

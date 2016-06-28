@@ -10,6 +10,7 @@ optionflags = doctest.NORMALIZE_WHITESPACE | \
               doctest.REPORT_ONLY_FIRST_FAILURE
 
 TESTFILES = [
+    'utils.rst',
     'widget.rst',
 ]
 
