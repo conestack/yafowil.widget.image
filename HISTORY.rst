@@ -5,6 +5,9 @@ History
 1.4 (unreleased)
 ----------------
 
+- Use ``yafowil.utils.entry_point`` decorator.
+  [rnix, 2016-06-28]
+
 - Copy over used functions from ``ImageUtils`` package and drop dependency.
   [rnix, 2016-06-28]
 
