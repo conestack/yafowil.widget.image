@@ -674,7 +674,7 @@ Crop as is without offset, size (20, 20)::
     {'mimetype': 'image/png', 
     'action': 'new', 
     'image': <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>, 
-    'cropped': <PIL.Image._ImageCrop image mode=RGBA size=20x20 at ...>, 
+    'cropped': <PIL.Image.Image image mode=RGBA size=20x20 at ...>, 
     'file': <StringIO.StringIO instance at ...>}
 
     >>> path = pkg_resources.resource_filename(
@@ -703,7 +703,7 @@ Crop as is without offset, size (40, 20)::
     {'mimetype': 'image/png', 
     'action': 'new', 
     'image': <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>, 
-    'cropped': <PIL.Image._ImageCrop image mode=RGBA size=40x20 at ...>, 
+    'cropped': <PIL.Image.Image image mode=RGBA size=40x20 at ...>, 
     'file': <StringIO.StringIO instance at ...>}
 
     >>> path = pkg_resources.resource_filename(
@@ -732,7 +732,7 @@ Crop as is without offset, size (20, 40)::
     {'mimetype': 'image/png', 
     'action': 'new', 
     'image': <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>, 
-    'cropped': <PIL.Image._ImageCrop image mode=RGBA size=20x40 at ...>, 
+    'cropped': <PIL.Image.Image image mode=RGBA size=20x40 at ...>, 
     'file': <StringIO.StringIO instance at ...>}
 
     >>> path = pkg_resources.resource_filename(
@@ -762,7 +762,7 @@ Crop with offset (5, 3), size (20, 40)::
     {'mimetype': 'image/png', 
     'action': 'new', 
     'image': <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>, 
-    'cropped': <PIL.Image._ImageCrop image mode=RGBA size=20x40 at ...>, 
+    'cropped': <PIL.Image.Image image mode=RGBA size=20x40 at ...>, 
     'file': <StringIO.StringIO instance at ...>}
 
     >>> path = pkg_resources.resource_filename(
@@ -792,7 +792,7 @@ Crop with offset (5, 0), size (50, 20) -> x overflow::
     {'mimetype': 'image/png', 
     'action': 'new', 
     'image': <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>, 
-    'cropped': <PIL.Image._ImageCrop image mode=RGBA size=50x20 at ...>, 
+    'cropped': <PIL.Image.Image image mode=RGBA size=50x20 at ...>, 
     'file': <StringIO.StringIO instance at ...>}
 
     >>> path = pkg_resources.resource_filename(
@@ -832,7 +832,7 @@ Crop fitting from lanscape, size (30, 18)::
     {'mimetype': 'image/png', 
     'action': 'new', 
     'image': <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=40x20 at ...>, 
-    'cropped': <PIL.Image._ImageCrop image mode=RGBA size=30x18 at ...>, 
+    'cropped': <PIL.Image.Image image mode=RGBA size=30x18 at ...>, 
     'file': <StringIO.StringIO instance at ...>}
 
     >>> path = pkg_resources.resource_filename(
@@ -862,7 +862,7 @@ Crop fitting from landscape, size (18, 30)::
     {'mimetype': 'image/png', 
     'action': 'new', 
     'image': <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=40x20 at ...>, 
-    'cropped': <PIL.Image._ImageCrop image mode=RGBA size=18x30 at ...>, 
+    'cropped': <PIL.Image.Image image mode=RGBA size=18x30 at ...>, 
     'file': <StringIO.StringIO instance at ...>}
 
     >>> path = pkg_resources.resource_filename(
@@ -892,7 +892,7 @@ Crop fitting from portrait, size (30, 18)::
     {'mimetype': 'image/png', 
     'action': 'new', 
     'image': <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=20x40 at ...>, 
-    'cropped': <PIL.Image._ImageCrop image mode=RGBA size=30x18 at ...>, 
+    'cropped': <PIL.Image.Image image mode=RGBA size=30x18 at ...>, 
     'file': <StringIO.StringIO instance at ...>}
 
     >>> path = pkg_resources.resource_filename(
@@ -922,7 +922,7 @@ Crop fitting from portrait, size (18, 30)::
     {'mimetype': 'image/png', 
     'action': 'new', 
     'image': <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=20x40 at ...>, 
-    'cropped': <PIL.Image._ImageCrop image mode=RGBA size=18x30 at ...>, 
+    'cropped': <PIL.Image.Image image mode=RGBA size=18x30 at ...>, 
     'file': <StringIO.StringIO instance at ...>}
 
     >>> path = pkg_resources.resource_filename(
@@ -952,7 +952,7 @@ Crop fitting square -> thus also same ratio::
     {'mimetype': 'image/png', 
     'action': 'new', 
     'image': <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>, 
-    'cropped': <PIL.Image._ImageCrop image mode=RGBA size=30x30 at ...>, 
+    'cropped': <PIL.Image.Image image mode=RGBA size=30x30 at ...>, 
     'file': <StringIO.StringIO instance at ...>}
 
     >>> path = pkg_resources.resource_filename(
@@ -982,7 +982,7 @@ Crop fitting portrait from square::
     {'mimetype': 'image/png', 
     'action': 'new', 
     'image': <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>, 
-    'cropped': <PIL.Image._ImageCrop image mode=RGBA size=40x50 at ...>, 
+    'cropped': <PIL.Image.Image image mode=RGBA size=40x50 at ...>, 
     'file': <StringIO.StringIO instance at ...>}
 
     >>> path = pkg_resources.resource_filename(
@@ -1012,7 +1012,7 @@ Crop fitting lanscape from square::
     {'mimetype': 'image/png', 
     'action': 'new', 
     'image': <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>, 
-    'cropped': <PIL.Image._ImageCrop image mode=RGBA size=48x40 at ...>, 
+    'cropped': <PIL.Image.Image image mode=RGBA size=48x40 at ...>, 
     'file': <StringIO.StringIO instance at ...>}
 
     >>> path = pkg_resources.resource_filename(
