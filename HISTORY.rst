@@ -2,10 +2,11 @@
 History
 =======
 
-1.5 (unreleased)
-----------------
+1.4.1 (2017-03-01)
+------------------
 
-- No changes yet.
+- Create runtime images directory for example only if examples are really used.
+  [rnix, 2017-08-24]
 
 
 1.4 (2017-03-01)

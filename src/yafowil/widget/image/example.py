@@ -5,14 +5,22 @@ import os
 import urlparse
 
 
-# container for images during runtime.
-runtime_images_dir = os.path.join(os.path.dirname(__file__), 'images_tmp')
-if not os.path.exists(runtime_images_dir):
-    os.mkdir(runtime_images_dir)
+_runtime_images_dir = None
+
+
+def runtime_images_dir():
+    # container for images during runtime.
+    global _runtime_images_dir
+    if _runtime_images_dir:
+        return _runtime_images_dir
+    _runtime_images_dir = os.path.join(os.path.dirname(__file__), 'images_tmp')
+    if not os.path.exists(_runtime_images_dir):
+        os.mkdir(runtime_images_dir)
+    return _runtime_images_dir
 
 
 def read_image(name):
-    image_path = os.path.join(runtime_images_dir, name + '.jpg')
+    image_path = os.path.join(runtime_images_dir(), name + '.jpg')
     if not os.path.exists(image_path):
         data = ''
     else:
@@ -32,7 +40,7 @@ def image_response(url):
 def save_image(widget, data):
     name = 'yafowil.widget.image.image'
     image = data.extracted[name]['image']
-    image_path = os.path.join(runtime_images_dir, name + '.jpg')
+    image_path = os.path.join(runtime_images_dir(), name + '.jpg')
     if image['action'] == 'keep':
         return
     if image['action'] == 'delete':
@@ -97,7 +105,7 @@ Create widget.
 def image():
     name = 'yafowil.widget.image.image'
     image_name = name + '.jpg'
-    image_path = os.path.join(runtime_images_dir, image_name)
+    image_path = os.path.join(runtime_images_dir(), image_name)
     def get_value(widget, data):
         image_value = UNSET
         if os.path.exists(image_path):
