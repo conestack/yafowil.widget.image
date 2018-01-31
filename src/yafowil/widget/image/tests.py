@@ -268,7 +268,7 @@ class TestImageWidget(NodeTestCase):
             'image': {
                 'file': StringIO(self.dummy_png),
                 'mimetype': 'image/png'
-            },
+            }
         })
         self.assertEqual(data.errors, [])
         self.assertEqual(data.value, UNSET)
@@ -379,8 +379,7 @@ class TestImageWidget(NodeTestCase):
             name='image',
             props={
                 'accept': ''
-            }
-        )
+            })
         data = image.extract({
             'image': {
                 'file': StringIO(self.dummy_jpg),
@@ -401,8 +400,7 @@ class TestImageWidget(NodeTestCase):
             name='image',
             props={
                 'accept': 'text/*'
-            }
-        )
+            })
         request = {
             'image': {
                 'file': StringIO(self.dummy_jpg),
@@ -422,8 +420,7 @@ class TestImageWidget(NodeTestCase):
             name='image',
             props={
                 'accept': 'image/png'
-            }
-        )
+            })
         data = image.extract({
             'image': {
                 'file': StringIO(self.dummy_jpg),
@@ -441,8 +438,7 @@ class TestImageWidget(NodeTestCase):
             name='image',
             props={
                 'accept': 'image/jpg'
-            }
-        )
+            })
         data = image.extract({
             'image': {
                 'file': StringIO(self.dummy_jpg),
@@ -463,8 +459,7 @@ class TestImageWidget(NodeTestCase):
             name='image',
             props={
                 'accept': 'image/*'
-            }
-        )
+            })
         data = image.extract({
             'image': {
                 'file': StringIO(self.dummy_pdf),
@@ -482,15 +477,11 @@ class TestImageWidget(NodeTestCase):
         self.check_output("""
         <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>
         """, str(image))
-
         buffer.seek(0)
         data = buffer.read()
-
         self.assertTrue(data.startswith('\x89PNG\r\n'))
         self.assertTrue(data.endswith('\xaeB`\x82'))
-
         self.assertEqual(image.size, (50, 50))
-
         self.assertEqual(image.info['dpi'], (72, 72))
 
     def test_extract_size_minsize(self):
@@ -499,8 +490,7 @@ class TestImageWidget(NodeTestCase):
             name='image',
             props={
                 'minsize': (60, 60)
-            }
-        )
+            })
         request = {
             'image': {
                 'file': StringIO(self.dummy_png),
@@ -517,8 +507,7 @@ class TestImageWidget(NodeTestCase):
             name='image',
             props={
                 'minsize': (40, 40)
-            }
-        )
+            })
         data = image.extract(request)
         self.assertEqual(data.errors, [])
 
@@ -528,8 +517,7 @@ class TestImageWidget(NodeTestCase):
             name='image',
             props={
                 'maxsize': (40, 40)
-            }
-        )
+            })
         request = {
             'image': {
                 'file': StringIO(self.dummy_png),
@@ -546,8 +534,7 @@ class TestImageWidget(NodeTestCase):
             name='image',
             props={
                 'maxsize': (60, 60)
-            }
-        )
+            })
         data = image.extract(request)
         self.assertEqual(data.errors, [])
 
@@ -558,8 +545,7 @@ class TestImageWidget(NodeTestCase):
             props={
                 'minsize': (40, 40),
                 'maxsize': (40, 40)
-            }
-        )
+            })
         request = {
             'image': {
                 'file': StringIO(self.dummy_png),
@@ -577,8 +563,7 @@ class TestImageWidget(NodeTestCase):
             props={
                 'minsize': (50, 50),
                 'maxsize': (50, 50)
-            }
-        )
+            })
         data = image.extract(request)
         self.assertEqual(data.errors, [])
 
@@ -589,8 +574,7 @@ class TestImageWidget(NodeTestCase):
             name='image',
             props={
                 'mindpi': (80, 80)
-            }
-        )
+            })
         request = {
             'image': {
                 'file': StringIO(self.dummy_png),
@@ -607,8 +591,7 @@ class TestImageWidget(NodeTestCase):
             name='image',
             props={
                 'mindpi': (60, 60)
-            }
-        )
+            })
         data = image.extract(request)
         self.assertEqual(data.errors, [])
 
@@ -619,8 +602,7 @@ class TestImageWidget(NodeTestCase):
             name='image',
             props={
                 'maxdpi': (60, 60)
-            }
-        )
+            })
         request = {
             'image': {
                 'file': StringIO(self.dummy_png),
@@ -637,8 +619,7 @@ class TestImageWidget(NodeTestCase):
             name='image',
             props={
                 'maxdpi': (80, 80)
-            }
-        )
+            })
         data = image.extract(request)
         self.assertEqual(data.errors, [])
 
@@ -650,8 +631,7 @@ class TestImageWidget(NodeTestCase):
             props={
                 'mindpi': (60, 60),
                 'maxdpi': (60, 60)
-            }
-        )
+            })
         request = {
             'image': {
                 'file': StringIO(self.dummy_png),
@@ -669,8 +649,7 @@ class TestImageWidget(NodeTestCase):
             props={
                 'mindpi': (72, 72),
                 'maxdpi': (72, 72)
-            }
-        )
+            })
         data = image.extract(request)
         self.assertEqual(data.errors, [])
 
@@ -684,8 +663,7 @@ class TestImageWidget(NodeTestCase):
                     'landscape': (70, 40),
                     'portrait': (40, 70)
                 }
-            }
-        )
+            })
         request = {
             'image': {
                 'file': StringIO(self.dummy_png),
@@ -710,7 +688,6 @@ class TestImageWidget(NodeTestCase):
         ('micro', <PIL.Image.Image image mode=RGBA size=20x20 at ...>),
         ('portrait', <PIL.Image.Image image mode=RGBA size=40x40 at ...>)]
         """, str(sorted(data.extracted['scales'].items())))
-
         # save images to testing folder for manual inspection
         for name, image in data.extracted['scales'].items():
             path = pkg_resources.resource_filename(
@@ -774,8 +751,7 @@ class TestImageWidget(NodeTestCase):
                 'crop': {
                     'size': (20, 20)
                 }
-            }
-        )
+            })
         request = {
             'image': {
                 'file': StringIO(self.dummy_png),
@@ -804,8 +780,7 @@ class TestImageWidget(NodeTestCase):
                 'crop': {
                     'size': (40, 20)
                 }
-            }
-        )
+            })
         request = {
             'image': {
                 'file': StringIO(self.dummy_png),
@@ -838,8 +813,7 @@ class TestImageWidget(NodeTestCase):
                 'crop': {
                     'size': (20, 40)
                 }
-            }
-        )
+            })
         request = {
             'image': {
                 'file': StringIO(self.dummy_png),
@@ -873,8 +847,7 @@ class TestImageWidget(NodeTestCase):
                     'size': (20, 40),
                     'offset': (5, 3)
                 }
-            }
-        )
+            })
         request = {
             'image': {
                 'file': StringIO(self.dummy_png),
@@ -904,8 +877,7 @@ class TestImageWidget(NodeTestCase):
                     'size': (50, 20),
                     'offset': (5, 0)
                 }
-            }
-        )
+            })
         request = {
             'image': {
                 'file': StringIO(self.dummy_png),
@@ -940,8 +912,7 @@ class TestImageWidget(NodeTestCase):
                     'size': (30, 18),
                     'fitting': True
                 }
-            }
-        )
+            })
         request = {
             'image': {
                 'file': StringIO(self.dummy_file_data('crop_size_40_20.png')),
@@ -976,8 +947,7 @@ class TestImageWidget(NodeTestCase):
                     'size': (18, 30),
                     'fitting': True
                 }
-            }
-        )
+            })
         request = {
             'image': {
                 'file': StringIO(self.dummy_file_data('crop_size_40_20.png')),
@@ -1012,8 +982,7 @@ class TestImageWidget(NodeTestCase):
                     'size': (30, 18),
                     'fitting': True
                 }
-            }
-        )
+            })
         request = {
             'image': {
                 'file': StringIO(self.dummy_file_data('crop_size_20_40.png')),
@@ -1048,8 +1017,7 @@ class TestImageWidget(NodeTestCase):
                     'size': (18, 30),
                     'fitting': True
                 }
-            }
-        )
+            })
         request = {
             'image': {
                 'file': StringIO(self.dummy_file_data('crop_size_20_40.png')),
@@ -1079,8 +1047,7 @@ class TestImageWidget(NodeTestCase):
                     'size': (30, 30),
                     'fitting': True
                 }
-            }
-        )
+            })
         request = {
             'image': {
                 'file': StringIO(self.dummy_png),
@@ -1110,8 +1077,7 @@ class TestImageWidget(NodeTestCase):
                     'size': (40, 50),
                     'fitting': True
                 }
-            }
-        )
+            })
         request = {
             'image': {
                 'file': StringIO(self.dummy_png),
@@ -1141,8 +1107,7 @@ class TestImageWidget(NodeTestCase):
                     'size': (48, 40),
                     'fitting': True
                 }
-            }
-        )
+            })
         request = {
             'image': {
                 'file': StringIO(self.dummy_png),
