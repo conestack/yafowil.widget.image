@@ -1,9 +1,9 @@
 from StringIO import StringIO
 from decimal import Decimal
-from node.tests import NodeTestCase
 from node.utils import UNSET
 from yafowil.base import ExtractionError
 from yafowil.base import factory
+from yafowil.tests import YafowilTestCase
 from yafowil.tests import fxml
 from yafowil.widget.image.utils import aspect_ratio_approximate
 from yafowil.widget.image.utils import same_aspect_ratio
@@ -12,7 +12,6 @@ import PIL
 import os
 import pkg_resources
 import unittest
-import yafowil.widget.image
 import yafowil.loader
 
 
@@ -37,7 +36,12 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(scale_size((640, 480), (None, 3)), (4, 3))
 
 
-class TestImageWidget(NodeTestCase):
+class TestImageWidget(YafowilTestCase):
+
+    def setUp(self):
+        super(TestImageWidget, self).setUp()
+        from yafowil.widget.image import widget
+        reload(widget)
 
     def dummy_file_data(self, filename):
         path = pkg_resources.resource_filename(
