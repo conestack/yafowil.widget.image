@@ -20,16 +20,16 @@ def runtime_images_dir():
         return _runtime_images_dir
     _runtime_images_dir = os.path.join(os.path.dirname(__file__), 'images_tmp')
     if not os.path.exists(_runtime_images_dir):
-        os.mkdir(runtime_images_dir)
+        os.mkdir(_runtime_images_dir)
     return _runtime_images_dir
 
 
 def read_image(name):
     image_path = os.path.join(runtime_images_dir(), name + '.jpg')
     if not os.path.exists(image_path):
-        data = ''
+        data = b''
     else:
-        with open(image_path) as fd:
+        with open(image_path, 'rb') as fd:
             data = fd.read()
     return data
 
