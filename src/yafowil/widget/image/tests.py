@@ -1,17 +1,8 @@
-from yafowil.compat import IS_PY2
-
-if IS_PY2:
-    from StringIO import StringIO
-else:
-    from io import BytesIO as StringIO
-
-if not IS_PY2:
-    from importlib import reload 
-
 from decimal import Decimal
 from node.utils import UNSET
 from yafowil.base import ExtractionError
 from yafowil.base import factory
+from yafowil.compat import IS_PY2
 from yafowil.tests import YafowilTestCase
 from yafowil.tests import fxml
 from yafowil.widget.image.utils import aspect_ratio_approximate
@@ -22,6 +13,13 @@ import PIL
 import pkg_resources
 import unittest
 import yafowil.loader
+
+
+if IS_PY2:
+    from StringIO import StringIO
+else:
+    from importlib import reload
+    from io import BytesIO as StringIO
 
 
 class TestUtils(unittest.TestCase):
@@ -286,11 +284,11 @@ class TestImageWidget(YafowilTestCase):
         self.assertEqual(data.errors, [])
         self.assertEqual(data.value, UNSET)
         self.check_output("""
-            [('action', 'new'),
-            ('file', <...>),
-            ('image', <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>),
-            ('mimetype', 'image/png')]
-            """, str(sorted(data.extracted.items())))
+        [('action', 'new'),
+        ('file', <... at ...>),
+        ('image', <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>),
+        ('mimetype', 'image/png')]
+        """, str(sorted(data.extracted.items())))
 
     def test_extract_keep(self):
         # Extract ``keep`` returns original value::
@@ -311,13 +309,13 @@ class TestImageWidget(YafowilTestCase):
         self.assertEqual(data.errors, [])
         self.check_output("""
         [('action', 'keep'),
-        ('file', <...>),
+        ('file', <... at ...>),
         ('image', <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>),
         ('mimetype', 'image/png')]
         """, str(sorted(data.value.items())))
         self.check_output("""
         [('action', 'keep'),
-        ('file', <...>),
+        ('file', <... at ...>),
         ('image', <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>),
         ('mimetype', 'image/png')]
         """, str(sorted(data.extracted.items())))
@@ -344,12 +342,12 @@ class TestImageWidget(YafowilTestCase):
         self.assertEqual(data.errors, [])
         self.check_output("""
         [('action', 'replace'),
-        ('file', <...>),
+        ('file', <... at ...>),
         ('mimetype', 'image/png')]
         """, str(sorted(data.value.items())))
         self.check_output("""
         [('action', 'replace'),
-        ('file', <...>),
+        ('file', <... at ...>),
         ('image', <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=50x50 at ...>),
         ('mimetype', 'image/jpg')]
         """, str(sorted(data.extracted.items())))
@@ -460,7 +458,7 @@ class TestImageWidget(YafowilTestCase):
         })
         self.check_output("""
         [('action', 'new'),
-        ('file', <...>),
+        ('file', <... at ...>),
         ('image', <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=50x50 at ...>),
         ('mimetype', 'image/jpg')]
         """, str(sorted(data.extracted.items())))
@@ -691,7 +689,7 @@ class TestImageWidget(YafowilTestCase):
         self.assertEqual(data.extracted['action'], 'new')
         self.assertEqual(data.extracted['mimetype'], 'image/png')
         self.check_output("""
-        <...>
+        <... at ...>
         """, str(data.extracted['file']))
         self.check_output("""
         <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>
@@ -775,7 +773,7 @@ class TestImageWidget(YafowilTestCase):
         self.check_output("""
         [('action', 'new'),
         ('cropped', <PIL.Image.Image image mode=RGBA size=20x20 at ...>),
-        ('file', <...>),
+        ('file', <... at ...>),
         ('image', <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>),
         ('mimetype', 'image/png')]
         """, str(sorted(data.extracted.items())))
@@ -804,7 +802,7 @@ class TestImageWidget(YafowilTestCase):
         self.check_output("""
         [('action', 'new'),
         ('cropped', <PIL.Image.Image image mode=RGBA size=40x20 at ...>),
-        ('file', <...>),
+        ('file', <... at ...>),
         ('image', <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>),
         ('mimetype', 'image/png')]
         """, str(sorted(data.extracted.items())))
@@ -837,7 +835,7 @@ class TestImageWidget(YafowilTestCase):
         self.check_output("""
         [('action', 'new'),
         ('cropped', <PIL.Image.Image image mode=RGBA size=20x40 at ...>),
-        ('file', <...>),
+        ('file', <... at ...>),
         ('image', <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>),
         ('mimetype', 'image/png')]
         """, str(sorted(data.extracted.items())))
@@ -871,7 +869,7 @@ class TestImageWidget(YafowilTestCase):
         self.check_output("""
         [('action', 'new'),
         ('cropped', <PIL.Image.Image image mode=RGBA size=20x40 at ...>),
-        ('file', <...>),
+        ('file', <... at ...>),
         ('image', <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>),
         ('mimetype', 'image/png')]
         """, str(sorted(data.extracted.items())))
@@ -901,7 +899,7 @@ class TestImageWidget(YafowilTestCase):
         self.check_output("""
         [('action', 'new'),
         ('cropped', <PIL.Image.Image image mode=RGBA size=50x20 at ...>),
-        ('file', <...>),
+        ('file', <... at ...>),
         ('image', <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>),
         ('mimetype', 'image/png')]
         """, str(sorted(data.extracted.items())))
@@ -936,7 +934,7 @@ class TestImageWidget(YafowilTestCase):
         self.check_output("""
         [('action', 'new'),
         ('cropped', <PIL.Image.Image image mode=RGBA size=30x18 at ...>),
-        ('file', <...>),
+        ('file', <... at ...>),
         ('image', <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=40x20 at ...>),
         ('mimetype', 'image/png')]
         """, str(sorted(data.extracted.items())))
@@ -971,7 +969,7 @@ class TestImageWidget(YafowilTestCase):
         self.check_output("""
         [('action', 'new'),
         ('cropped', <PIL.Image.Image image mode=RGBA size=18x30 at ...>),
-        ('file', <...>),
+        ('file', <... at ...>),
         ('image', <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=40x20 at ...>),
         ('mimetype', 'image/png')]
         """, str(sorted(data.extracted.items())))
@@ -1006,7 +1004,7 @@ class TestImageWidget(YafowilTestCase):
         self.check_output("""
         [('action', 'new'),
         ('cropped', <PIL.Image.Image image mode=RGBA size=30x18 at ...>),
-        ('file', <...>),
+        ('file', <... at ...>),
         ('image', <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=20x40 at ...>),
         ('mimetype', 'image/png')]
         """, str(sorted(data.extracted.items())))
@@ -1041,7 +1039,7 @@ class TestImageWidget(YafowilTestCase):
         self.check_output("""
         [('action', 'new'),
         ('cropped', <PIL.Image.Image image mode=RGBA size=18x30 at ...>),
-        ('file', <...>),
+        ('file', <... at ...>),
         ('image', <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=20x40 at ...>),
         ('mimetype', 'image/png')]
         """, str(sorted(data.extracted.items())))
@@ -1071,7 +1069,7 @@ class TestImageWidget(YafowilTestCase):
         self.check_output("""
         [('action', 'new'),
         ('cropped', <PIL.Image.Image image mode=RGBA size=30x30 at ...>),
-        ('file', <...>),
+        ('file', <... at ...>),
         ('image', <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>),
         ('mimetype', 'image/png')]
         """, str(sorted(data.extracted.items())))
@@ -1101,7 +1099,7 @@ class TestImageWidget(YafowilTestCase):
         self.check_output("""
         [('action', 'new'),
         ('cropped', <PIL.Image.Image image mode=RGBA size=40x50 at ...>),
-        ('file', <...>),
+        ('file', <... at ...>),
         ('image', <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>),
         ('mimetype', 'image/png')]
         """, str(sorted(data.extracted.items())))
@@ -1131,7 +1129,7 @@ class TestImageWidget(YafowilTestCase):
         self.check_output("""
         [('action', 'new'),
         ('cropped', <PIL.Image.Image image mode=RGBA size=48x40 at ...>),
-        ('file', <...>),
+        ('file', <... at ...>),
         ('image', <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>),
         ('mimetype', 'image/png')]
         """, str(sorted(data.extracted.items())))
