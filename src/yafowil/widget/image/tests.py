@@ -9,7 +9,6 @@ from yafowil.widget.image.utils import aspect_ratio_approximate
 from yafowil.widget.image.utils import same_aspect_ratio
 from yafowil.widget.image.utils import scale_size
 import PIL
-# import os
 import pkg_resources
 import unittest
 import yafowil.loader
