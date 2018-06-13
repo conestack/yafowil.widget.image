@@ -398,7 +398,7 @@ class TestImageWidget(YafowilTestCase):
         })
         self.check_output("""
         [('action', 'new'),
-        ('file', <...),
+        ('file', <... at ...>),
         ('image', <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=50x50 at ...),
         ('mimetype', 'image/jpg')]
         """, str(sorted(data.extracted.items())))
