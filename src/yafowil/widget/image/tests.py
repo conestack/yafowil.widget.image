@@ -285,12 +285,20 @@ class TestImageWidget(YafowilTestCase):
         })
         self.assertEqual(data.errors, [])
         self.assertEqual(data.value, UNSET)
-        self.check_output("""
-        [('action', 'new'),
-        ('file', <StringIO.StringIO instance at ...>),
-        ('image', <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>),
-        ('mimetype', 'image/png')]
-        """, str(sorted(data.extracted.items())))
+        if IS_PY2:
+            self.check_output("""
+                [('action', 'new'),
+                ('file', <StringIO.StringIO instance at ...>),
+                ('image', <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>),
+                ('mimetype', 'image/png')]
+                """, str(sorted(data.extracted.items())))
+        else:
+            self.check_output("""
+                [('action', 'new'),
+                ('file', <_io.BytesIO object at ...>),
+                ('image', <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>),
+                ('mimetype', 'image/png')]
+                """, str(sorted(data.extracted.items())))
 
     def test_extract_keep(self):
         # Extract ``keep`` returns original value::
@@ -357,19 +365,20 @@ class TestImageWidget(YafowilTestCase):
         if IS_PY2:
             self.check_output("""
             [('action', 'replace'),
-            ('file', <_io.BytesIO object at ...>),
+            ('file', <StringIO.StringIO instance at ...>),
             ('image', <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=50x50 at ...>),
             ('mimetype', 'image/jpg')]
             """, str(sorted(data.extracted.items())))
         else:
+            self.check_output("""
             [('action', 'replace'),
-            ('file', <StringIO.StringIO instance at ...>),
+            ('file', <_io.BytesIO object at ...>),
             ('image', <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=50x50 at ...>),
             ('mimetype', 'image/jpg')]
-            """, str(sorted(data.extracted.items())))            
+            """, str(sorted(data.extracted.items())))
         extracted = data.extracted['file'].read()
-        self.assertTrue(extracted.startswith('\xff\xd8\xff\xe0\x00\x10JFIF'))
-        self.assertTrue(extracted.endswith('\xff\xd9'))
+        self.assertTrue(extracted.startswith(b'\xff\xd8\xff\xe0\x00\x10JFIF'))
+        self.assertTrue(extracted.endswith(b'\xff\xd9'))
 
     def test_extract_delete(self):
         # Extract ``delete`` returns UNSET
