@@ -1,18 +1,24 @@
-from StringIO import StringIO
 from decimal import Decimal
 from node.utils import UNSET
 from yafowil.base import ExtractionError
 from yafowil.base import factory
+from yafowil.compat import IS_PY2
 from yafowil.tests import YafowilTestCase
 from yafowil.tests import fxml
 from yafowil.widget.image.utils import aspect_ratio_approximate
 from yafowil.widget.image.utils import same_aspect_ratio
 from yafowil.widget.image.utils import scale_size
 import PIL
-import os
 import pkg_resources
 import unittest
 import yafowil.loader
+
+
+if IS_PY2:
+    from StringIO import StringIO
+else:
+    from importlib import reload
+    from io import BytesIO as StringIO
 
 
 class TestUtils(unittest.TestCase):
@@ -46,7 +52,7 @@ class TestImageWidget(YafowilTestCase):
     def dummy_file_data(self, filename):
         path = pkg_resources.resource_filename(
             'yafowil.widget.image', 'testing/%s' % filename)
-        with open(path) as file:
+        with open(path, 'rb') as file:
             data = file.read()
         return data
 
@@ -64,16 +70,16 @@ class TestImageWidget(YafowilTestCase):
 
     def test_dummy_file_data(self):
         dummy_png = self.dummy_png
-        self.assertTrue(dummy_png.startswith('\x89PNG\r\n'))
-        self.assertTrue(dummy_png.endswith('\x00IEND\xaeB`\x82'))
+        self.assertTrue(dummy_png.startswith(b'\x89PNG\r\n'))
+        self.assertTrue(dummy_png.endswith(b'\x00IEND\xaeB`\x82'))
 
         dummy_jpg = self.dummy_jpg
-        self.assertTrue(dummy_jpg.startswith('\xff\xd8\xff\xe0\x00\x10JFIF'))
-        self.assertTrue(dummy_jpg.endswith('\xff\xd9'))
+        self.assertTrue(dummy_jpg.startswith(b'\xff\xd8\xff\xe0\x00\x10JFIF'))
+        self.assertTrue(dummy_jpg.endswith(b'\xff\xd9'))
 
         dummy_pdf = self.dummy_pdf
-        self.assertTrue(dummy_pdf.startswith('%PDF-1.5\n%'))
-        self.assertTrue(dummy_pdf.endswith('\n956\n%%EOF\n'))
+        self.assertTrue(dummy_pdf.startswith(b'%PDF-1.5\n%'))
+        self.assertTrue(dummy_pdf.endswith(b'\n956\n%%EOF\n'))
 
     def test_render_empty(self):
         form = factory(
@@ -278,7 +284,7 @@ class TestImageWidget(YafowilTestCase):
         self.assertEqual(data.value, UNSET)
         self.check_output("""
         [('action', 'new'),
-        ('file', <StringIO.StringIO instance at ...>),
+        ('file', <... at ...>),
         ('image', <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>),
         ('mimetype', 'image/png')]
         """, str(sorted(data.extracted.items())))
@@ -302,19 +308,19 @@ class TestImageWidget(YafowilTestCase):
         self.assertEqual(data.errors, [])
         self.check_output("""
         [('action', 'keep'),
-        ('file', <StringIO.StringIO instance at ...>),
+        ('file', <... at ...>),
         ('image', <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>),
         ('mimetype', 'image/png')]
         """, str(sorted(data.value.items())))
         self.check_output("""
         [('action', 'keep'),
-        ('file', <StringIO.StringIO instance at ...>),
+        ('file', <... at ...>),
         ('image', <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>),
         ('mimetype', 'image/png')]
         """, str(sorted(data.extracted.items())))
         extracted = data.extracted['file'].read()
-        self.assertTrue(extracted.startswith('\x89PNG\r\n'))
-        self.assertTrue(extracted.endswith('\xaeB`\x82'))
+        self.assertTrue(extracted.startswith(b'\x89PNG\r\n'))
+        self.assertTrue(extracted.endswith(b'\xaeB`\x82'))
 
     def test_extract_replace(self):
         # Extract ``replace`` returns new value
@@ -335,18 +341,18 @@ class TestImageWidget(YafowilTestCase):
         self.assertEqual(data.errors, [])
         self.check_output("""
         [('action', 'replace'),
-        ('file', <StringIO.StringIO instance at ...>),
+        ('file', <... at ...>),
         ('mimetype', 'image/png')]
         """, str(sorted(data.value.items())))
         self.check_output("""
         [('action', 'replace'),
-        ('file', <StringIO.StringIO instance at ...>),
+        ('file', <... at ...>),
         ('image', <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=50x50 at ...>),
         ('mimetype', 'image/jpg')]
         """, str(sorted(data.extracted.items())))
         extracted = data.extracted['file'].read()
-        self.assertTrue(extracted.startswith('\xff\xd8\xff\xe0\x00\x10JFIF'))
-        self.assertTrue(extracted.endswith('\xff\xd9'))
+        self.assertTrue(extracted.startswith(b'\xff\xd8\xff\xe0\x00\x10JFIF'))
+        self.assertTrue(extracted.endswith(b'\xff\xd9'))
 
     def test_extract_delete(self):
         # Extract ``delete`` returns UNSET
@@ -392,7 +398,7 @@ class TestImageWidget(YafowilTestCase):
         })
         self.check_output("""
         [('action', 'new'),
-        ('file', <StringIO.StringIO instance at ...),
+        ('file', <... at ...>),
         ('image', <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=50x50 at ...),
         ('mimetype', 'image/jpg')]
         """, str(sorted(data.extracted.items())))
@@ -451,7 +457,7 @@ class TestImageWidget(YafowilTestCase):
         })
         self.check_output("""
         [('action', 'new'),
-        ('file', <StringIO.StringIO instance at ...>),
+        ('file', <... at ...>),
         ('image', <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=50x50 at ...>),
         ('mimetype', 'image/jpg')]
         """, str(sorted(data.extracted.items())))
@@ -483,8 +489,8 @@ class TestImageWidget(YafowilTestCase):
         """, str(image))
         buffer.seek(0)
         data = buffer.read()
-        self.assertTrue(data.startswith('\x89PNG\r\n'))
-        self.assertTrue(data.endswith('\xaeB`\x82'))
+        self.assertTrue(data.startswith(b'\x89PNG\r\n'))
+        self.assertTrue(data.endswith(b'\xaeB`\x82'))
         self.assertEqual(image.size, (50, 50))
         self.assertEqual(image.info['dpi'], (72, 72))
 
@@ -682,7 +688,7 @@ class TestImageWidget(YafowilTestCase):
         self.assertEqual(data.extracted['action'], 'new')
         self.assertEqual(data.extracted['mimetype'], 'image/png')
         self.check_output("""
-        <StringIO.StringIO instance at ...>
+        <... at ...>
         """, str(data.extracted['file']))
         self.check_output("""
         <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>
@@ -766,7 +772,7 @@ class TestImageWidget(YafowilTestCase):
         self.check_output("""
         [('action', 'new'),
         ('cropped', <PIL.Image.Image image mode=RGBA size=20x20 at ...>),
-        ('file', <StringIO.StringIO instance at ...>),
+        ('file', <... at ...>),
         ('image', <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>),
         ('mimetype', 'image/png')]
         """, str(sorted(data.extracted.items())))
@@ -795,7 +801,7 @@ class TestImageWidget(YafowilTestCase):
         self.check_output("""
         [('action', 'new'),
         ('cropped', <PIL.Image.Image image mode=RGBA size=40x20 at ...>),
-        ('file', <StringIO.StringIO instance at ...>),
+        ('file', <... at ...>),
         ('image', <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>),
         ('mimetype', 'image/png')]
         """, str(sorted(data.extracted.items())))
@@ -805,8 +811,8 @@ class TestImageWidget(YafowilTestCase):
         data.extracted['cropped'].save(path, quality=100)
 
         dummy_40_20_png = self.dummy_file_data('crop_size_40_20.png')
-        self.assertTrue(dummy_40_20_png.startswith('\x89PNG\r\n'))
-        self.assertTrue(dummy_40_20_png.endswith('\x00IEND\xaeB`\x82'))
+        self.assertTrue(dummy_40_20_png.startswith(b'\x89PNG\r\n'))
+        self.assertTrue(dummy_40_20_png.endswith(b'\x00IEND\xaeB`\x82'))
 
     def test_extract_crop_as_is_without_offset_20_40(self):
         # Crop as is without offset, size (20, 40)
@@ -828,7 +834,7 @@ class TestImageWidget(YafowilTestCase):
         self.check_output("""
         [('action', 'new'),
         ('cropped', <PIL.Image.Image image mode=RGBA size=20x40 at ...>),
-        ('file', <StringIO.StringIO instance at ...>),
+        ('file', <... at ...>),
         ('image', <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>),
         ('mimetype', 'image/png')]
         """, str(sorted(data.extracted.items())))
@@ -838,8 +844,8 @@ class TestImageWidget(YafowilTestCase):
         data.extracted['cropped'].save(path, quality=100)
 
         dummy_20_40_png = self.dummy_file_data('crop_size_20_40.png')
-        self.assertTrue(dummy_20_40_png.startswith('\x89PNG\r\n'))
-        self.assertTrue(dummy_20_40_png.endswith('\x00IEND\xaeB`\x82'))
+        self.assertTrue(dummy_20_40_png.startswith(b'\x89PNG\r\n'))
+        self.assertTrue(dummy_20_40_png.endswith(b'\x00IEND\xaeB`\x82'))
 
     def test_extract_crop_with_offset_5_3_size_20_40(self):
         # Crop with offset (5, 3), size (20, 40)
@@ -862,7 +868,7 @@ class TestImageWidget(YafowilTestCase):
         self.check_output("""
         [('action', 'new'),
         ('cropped', <PIL.Image.Image image mode=RGBA size=20x40 at ...>),
-        ('file', <StringIO.StringIO instance at ...>),
+        ('file', <... at ...>),
         ('image', <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>),
         ('mimetype', 'image/png')]
         """, str(sorted(data.extracted.items())))
@@ -892,7 +898,7 @@ class TestImageWidget(YafowilTestCase):
         self.check_output("""
         [('action', 'new'),
         ('cropped', <PIL.Image.Image image mode=RGBA size=50x20 at ...>),
-        ('file', <StringIO.StringIO instance at ...>),
+        ('file', <... at ...>),
         ('image', <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>),
         ('mimetype', 'image/png')]
         """, str(sorted(data.extracted.items())))
@@ -927,7 +933,7 @@ class TestImageWidget(YafowilTestCase):
         self.check_output("""
         [('action', 'new'),
         ('cropped', <PIL.Image.Image image mode=RGBA size=30x18 at ...>),
-        ('file', <StringIO.StringIO instance at ...>),
+        ('file', <... at ...>),
         ('image', <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=40x20 at ...>),
         ('mimetype', 'image/png')]
         """, str(sorted(data.extracted.items())))
@@ -962,7 +968,7 @@ class TestImageWidget(YafowilTestCase):
         self.check_output("""
         [('action', 'new'),
         ('cropped', <PIL.Image.Image image mode=RGBA size=18x30 at ...>),
-        ('file', <StringIO.StringIO instance at ...>),
+        ('file', <... at ...>),
         ('image', <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=40x20 at ...>),
         ('mimetype', 'image/png')]
         """, str(sorted(data.extracted.items())))
@@ -997,7 +1003,7 @@ class TestImageWidget(YafowilTestCase):
         self.check_output("""
         [('action', 'new'),
         ('cropped', <PIL.Image.Image image mode=RGBA size=30x18 at ...>),
-        ('file', <StringIO.StringIO instance at ...>),
+        ('file', <... at ...>),
         ('image', <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=20x40 at ...>),
         ('mimetype', 'image/png')]
         """, str(sorted(data.extracted.items())))
@@ -1032,7 +1038,7 @@ class TestImageWidget(YafowilTestCase):
         self.check_output("""
         [('action', 'new'),
         ('cropped', <PIL.Image.Image image mode=RGBA size=18x30 at ...>),
-        ('file', <StringIO.StringIO instance at ...>),
+        ('file', <... at ...>),
         ('image', <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=20x40 at ...>),
         ('mimetype', 'image/png')]
         """, str(sorted(data.extracted.items())))
@@ -1062,7 +1068,7 @@ class TestImageWidget(YafowilTestCase):
         self.check_output("""
         [('action', 'new'),
         ('cropped', <PIL.Image.Image image mode=RGBA size=30x30 at ...>),
-        ('file', <StringIO.StringIO instance at ...>),
+        ('file', <... at ...>),
         ('image', <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>),
         ('mimetype', 'image/png')]
         """, str(sorted(data.extracted.items())))
@@ -1092,7 +1098,7 @@ class TestImageWidget(YafowilTestCase):
         self.check_output("""
         [('action', 'new'),
         ('cropped', <PIL.Image.Image image mode=RGBA size=40x50 at ...>),
-        ('file', <StringIO.StringIO instance at ...>),
+        ('file', <... at ...>),
         ('image', <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>),
         ('mimetype', 'image/png')]
         """, str(sorted(data.extracted.items())))
@@ -1122,7 +1128,7 @@ class TestImageWidget(YafowilTestCase):
         self.check_output("""
         [('action', 'new'),
         ('cropped', <PIL.Image.Image image mode=RGBA size=48x40 at ...>),
-        ('file', <StringIO.StringIO instance at ...>),
+        ('file', <... at ...>),
         ('image', <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>),
         ('mimetype', 'image/png')]
         """, str(sorted(data.extracted.items())))
@@ -1139,8 +1145,8 @@ class TestImageWidget(YafowilTestCase):
         image.save(out, 'png', quality=100)
         out.seek(0)
         data = out.read()
-        self.assertTrue(data.startswith('\x89PNG\r\n'))
-        self.assertTrue(data.endswith('\x00IEND\xaeB`\x82'))
+        self.assertTrue(data.startswith(b'\x89PNG\r\n'))
+        self.assertTrue(data.endswith(b'\x00IEND\xaeB`\x82'))
 
 
 if __name__ == '__main__':
