@@ -24,5 +24,5 @@ def scale_size(size, sizer):
     size_new = list(sizer)
     i = size_new.index(None)
     j = i * -1 + 1
-    size_new[i] = (size_new[j] * size[i]) / size[j]
+    size_new[i] = (size_new[j] * size[i]) // size[j]
     return tuple(size_new)

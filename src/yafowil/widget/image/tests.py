@@ -1,8 +1,13 @@
 from yafowil.compat import IS_PY2
+
 if IS_PY2:
     from StringIO import StringIO
 else:
-    from io import StringIO
+    from io import BytesIO as StringIO
+
+if not IS_PY2:
+    from importlib import reload 
+
 from decimal import Decimal
 from node.utils import UNSET
 from yafowil.base import ExtractionError
@@ -50,7 +55,7 @@ class TestImageWidget(YafowilTestCase):
     def dummy_file_data(self, filename):
         path = pkg_resources.resource_filename(
             'yafowil.widget.image', 'testing/%s' % filename)
-        with open(path) as file:
+        with open(path, 'rb') as file:
             data = file.read()
         return data
 
@@ -337,17 +342,31 @@ class TestImageWidget(YafowilTestCase):
             'image-action': 'replace'
         })
         self.assertEqual(data.errors, [])
-        self.check_output("""
-        [('action', 'replace'),
-        ('file', <StringIO.StringIO instance at ...>),
-        ('mimetype', 'image/png')]
-        """, str(sorted(data.value.items())))
-        self.check_output("""
-        [('action', 'replace'),
-        ('file', <StringIO.StringIO instance at ...>),
-        ('image', <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=50x50 at ...>),
-        ('mimetype', 'image/jpg')]
-        """, str(sorted(data.extracted.items())))
+        if IS_PY2:
+            self.check_output("""
+            [('action', 'replace'),
+            ('file', <StringIO.StringIO instance at ...>),
+            ('mimetype', 'image/png')]
+            """, str(sorted(data.value.items())))
+        else:
+            self.check_output("""
+            [('action', 'replace'),
+            ('file', <_io.BytesIO object at ...>),
+            ('mimetype', 'image/png')]
+            """, str(sorted(data.value.items())))
+        if IS_PY2:
+            self.check_output("""
+            [('action', 'replace'),
+            ('file', <_io.BytesIO object at ...>),
+            ('image', <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=50x50 at ...>),
+            ('mimetype', 'image/jpg')]
+            """, str(sorted(data.extracted.items())))
+        else:
+            [('action', 'replace'),
+            ('file', <StringIO.StringIO instance at ...>),
+            ('image', <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=50x50 at ...>),
+            ('mimetype', 'image/jpg')]
+            """, str(sorted(data.extracted.items())))            
         extracted = data.extracted['file'].read()
         self.assertTrue(extracted.startswith('\xff\xd8\xff\xe0\x00\x10JFIF'))
         self.assertTrue(extracted.endswith('\xff\xd9'))
@@ -685,9 +704,14 @@ class TestImageWidget(YafowilTestCase):
         )
         self.assertEqual(data.extracted['action'], 'new')
         self.assertEqual(data.extracted['mimetype'], 'image/png')
-        self.check_output("""
-        <StringIO.StringIO instance at ...>
-        """, str(data.extracted['file']))
+        if IS_PY2:
+            self.check_output("""
+            <StringIO.StringIO instance at ...>
+            """, str(data.extracted['file']))
+        else:
+            self.check_output("""
+            <_io.BytesIO object at ...>
+            """, str(data.extracted['file']))
         self.check_output("""
         <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>
         """, str(data.extracted['image']))
@@ -1143,8 +1167,8 @@ class TestImageWidget(YafowilTestCase):
         image.save(out, 'png', quality=100)
         out.seek(0)
         data = out.read()
-        self.assertTrue(data.startswith('\x89PNG\r\n'))
-        self.assertTrue(data.endswith('\x00IEND\xaeB`\x82'))
+        self.assertTrue(data.startswith(b'\x89PNG\r\n'))
+        self.assertTrue(data.endswith(b'\x00IEND\xaeB`\x82'))
 
 
 if __name__ == '__main__':
