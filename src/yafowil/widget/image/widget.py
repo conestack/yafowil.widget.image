@@ -2,7 +2,6 @@ from PIL import Image
 from node.utils import UNSET
 from yafowil.base import ExtractionError
 from yafowil.base import factory
-from yafowil.base import fetch_value
 from yafowil.common import file_extractor
 from yafowil.common import file_options_renderer
 from yafowil.common import generic_required_extractor
@@ -16,7 +15,6 @@ from yafowil.widget.image.utils import aspect_ratio_approximate
 from yafowil.widget.image.utils import same_aspect_ratio
 from yafowil.widget.image.utils import scale_size
 import time
-import types
 
 
 _ = TSF('yafowil.widget.dict')
@@ -254,8 +252,8 @@ factory.register(
     display_renderers=[
         image_display_renderer])
 
-factory.doc['blueprint']['image'] = \
-"""Add-on widget `yafowil.widget.image 
+factory.doc['blueprint']['image'] = """\
+Add-on widget `yafowil.widget.image
 <http://github.com/bluedynamics/yafowil.widget.image/>`_.
 """
 

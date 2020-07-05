@@ -37,8 +37,9 @@ def read_image(name):
 def image_response(url):
     name = 'yafowil.widget.image.image'
     data = read_image(name)
-    return {'body': data,
-            'header': [('Content-Type', 'image/jpg')]
+    return {
+        'body': data,
+        'header': [('Content-Type', 'image/jpg')]
     }
 
 
@@ -66,7 +67,7 @@ this example.
 .. code-block:: python
 
     runtime_images_dir = os.path.join(os.path.dirname(__file__), 'images_tmp')
-    
+
     def save_image(widget, data):
         name = 'yafowil.widget.image.image'
         image = data.extracted[name]['image']
@@ -107,10 +108,12 @@ Create widget.
     })
 """
 
+
 def image():
     name = 'yafowil.widget.image.image'
     image_name = name + '.jpg'
     image_path = os.path.join(runtime_images_dir(), image_name)
+
     def get_value(widget, data):
         image_value = UNSET
         if os.path.exists(image_path):
@@ -120,9 +123,11 @@ def image():
                 'mimetype': 'image/jpg',
             }
         return image_value
+
     def get_src(widget, data):
         if os.path.exists(image_path):
             return image_name
+
     form = factory('fieldset', name=name)
     form['image'] = factory('#field:image', value=get_value, props={
         'label': 'Image',

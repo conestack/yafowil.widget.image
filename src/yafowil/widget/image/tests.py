@@ -3,15 +3,15 @@ from node.utils import UNSET
 from yafowil.base import ExtractionError
 from yafowil.base import factory
 from yafowil.compat import IS_PY2
-from yafowil.tests import YafowilTestCase
 from yafowil.tests import fxml
+from yafowil.tests import YafowilTestCase
 from yafowil.widget.image.utils import aspect_ratio_approximate
 from yafowil.widget.image.utils import same_aspect_ratio
 from yafowil.widget.image.utils import scale_size
 import PIL
 import pkg_resources
 import unittest
-import yafowil.loader
+import yafowil.loader  # noqa
 
 
 if IS_PY2:
@@ -1150,4 +1150,4 @@ class TestImageWidget(YafowilTestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()                                          # pragma: no cover
+    unittest.main()

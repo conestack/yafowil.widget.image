@@ -5,7 +5,7 @@ from decimal import Decimal
 def aspect_ratio_approximate(size):
     """Gets a decimal approximation of an aspect ratio.
     """
-    return Decimal('%.2f' % (float(size[0])/size[1]))
+    return Decimal('%.2f' % (float(size[0]) / size[1]))
 
 
 def same_aspect_ratio(size1, size2):
