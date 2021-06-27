@@ -254,7 +254,7 @@ factory.register(
 
 factory.doc['blueprint']['image'] = """\
 Add-on widget `yafowil.widget.image
-<http://github.com/bluedynamics/yafowil.widget.image/>`_.
+<http://github.com/conestack/yafowil.widget.image/>`_.
 """
 
 factory.defaults['image.class'] = 'image'
