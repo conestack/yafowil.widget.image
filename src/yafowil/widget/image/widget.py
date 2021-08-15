@@ -122,10 +122,13 @@ def size_extractor(widget, data):
 def dpi_extractor(widget, data):
     mindpi = attr_value('mindpi', widget, data)
     maxdpi = attr_value('maxdpi', widget, data)
+    rounddpi = attr_value('rounddpi', widget, data)
     if not mindpi and not maxdpi:
         return data.extracted
     if data.extracted and data.extracted.get('image'):
         dpi = data.extracted['image'].info['dpi']
+        if rounddpi:
+            dpi = [round(dpi[0]), round(dpi[1])]
         if mindpi == maxdpi:
             if dpi[0] != mindpi[0] or dpi[1] != mindpi[1]:
                 message = _('exact_image_dpi_required',
@@ -306,6 +309,15 @@ Minimum DPI of image defined as 2-tuple containing (x, y).
 factory.defaults['image.maxdpi'] = None
 factory.doc['props']['image.maxdpi'] = """\
 Maximum DPI of image defined as 2-tuple containing (x, y).
+"""
+
+factory.defaults['image.rounddpi'] = True
+factory.doc['props']['image.rounddpi'] = """\
+Round DPI values from image for extraction.
+
+Pillow, as of version 6.0, no longer rounds reported DPI values for BMP, JPEG
+and PNG images, but image manipulation programs may not produce accurate DPI
+values.
 """
 
 factory.defaults['image.scales'] = None

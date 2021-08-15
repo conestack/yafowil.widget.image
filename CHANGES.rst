@@ -4,7 +4,10 @@ Changes
 1.6 (unreleased)
 ----------------
 
-- No changes yet.
+- Introduce ``rounddpi`` flag for image blueprint. Pillow, as of version 6.0,
+  no longer rounds reported DPI values for BMP, JPEG and PNG images, but image
+  manipulation programs may not produce accurate DPI values.
+  [rnix]
 
 
 1.5 (2018-07-16)

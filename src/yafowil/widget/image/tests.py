@@ -492,7 +492,8 @@ class TestImageWidget(YafowilTestCase):
         self.assertTrue(data.startswith(b'\x89PNG\r\n'))
         self.assertTrue(data.endswith(b'\xaeB`\x82'))
         self.assertEqual(image.size, (50, 50))
-        self.assertEqual(image.info['dpi'], (72, 72))
+        self.assertEqual(round(image.info['dpi'][0]), 72)
+        self.assertEqual(round(image.info['dpi'][1]), 72)
 
     def test_extract_size_minsize(self):
         image = factory(
