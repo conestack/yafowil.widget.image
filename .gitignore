@@ -32,3 +32,10 @@
 /src/yafowil/widget/image/testing/crop_size_40_20.png
 /src/yafowil/widget/image/testing/crop_size_50_20_offset_5_0.png
 /src/yafowil/widget/image/images_tmp
+/karma/
+/lib/
+/lib64
+/node_modules/
+/package-lock.json
+/pyvenv.cfg
+/share/
