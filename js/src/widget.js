@@ -1,7 +1,6 @@
 import $ from 'jquery';
 import {i18n} from './i18n.js';
 
-// if (typeof(window['yafowil']) == "undefined") yafowil = {};
 
 export class ImageWidget {
 
@@ -15,20 +14,19 @@ export class ImageWidget {
         this.elem = elem;
 
         // XXX: file needs anyway, provide in yafowil directly?
-        $('input.file').bind('change', function(evt) {
-            var elem = $(this);
-            if (elem.attr('type') == 'radio') {
+        $('input.file').bind('change', function (evt) {
+            let elem = $(this);
+            if (elem.attr('type') === 'radio') {
                 return true;
             }
             $('input.file[value="replace"]').trigger('click');
         });
-        $('input.image').bind('change', function(evt) {
-            var elem = $(this);
-            if (elem.attr('type') == 'radio') {
+        $('input.image').bind('change', function (evt) {
+            let elem = $(this);
+            if (elem.attr('type') === 'radio') {
                 return true;
             }
             $('input.image[value="replace"]').trigger('click');
         });
-
     }
 }
