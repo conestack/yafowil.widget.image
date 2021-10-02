@@ -1,45 +1,34 @@
-/*
- * yafowil image widget
- */
+import $ from 'jquery';
+import {i18n} from './i18n.js';
 
-if (typeof(window['yafowil']) == "undefined") yafowil = {};
+// if (typeof(window['yafowil']) == "undefined") yafowil = {};
 
-(function($) {
+export class ImageWidget {
 
-    $(document).ready(function() {
-        // initial binding
-        yafowil.image.binder();
-        
-        // add after ajax binding if bdajax present
-        if (typeof(window['bdajax']) != "undefined") {
-            $.extend(bdajax.binders, {
-                imagewidget_binder: yafowil.image.binder
-            });
-        }
-    });
-    
-    $.extend(yafowil, {
-        
-        image: {
-            
-            binder: function(context) {
-                // XXX: file needs anyway, provide in yafowil directly?
-                $('input.file').bind('change', function(evt) {
-                    var elem = $(this);
-                    if (elem.attr('type') == 'radio') {
-                        return true;
-                    }
-                    $('input.file[value="replace"]').trigger('click');
-                });
-                $('input.image').bind('change', function(evt) {
-                    var elem = $(this);
-                    if (elem.attr('type') == 'radio') {
-                        return true;
-                    }
-                    $('input.image[value="replace"]').trigger('click');
-                });
+    static initialize(context) {
+        $('input.image', context).each(function (event) {
+            new ImageWidget($(this));
+        });
+    }
+
+    constructor(elem) {
+        this.elem = elem;
+
+        // XXX: file needs anyway, provide in yafowil directly?
+        $('input.file').bind('change', function(evt) {
+            var elem = $(this);
+            if (elem.attr('type') == 'radio') {
+                return true;
             }
-        }
-    });
+            $('input.file[value="replace"]').trigger('click');
+        });
+        $('input.image').bind('change', function(evt) {
+            var elem = $(this);
+            if (elem.attr('type') == 'radio') {
+                return true;
+            }
+            $('input.image[value="replace"]').trigger('click');
+        });
 
-})(jQuery);
+    }
+}
