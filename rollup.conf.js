@@ -1,7 +1,7 @@
 import cleanup from 'rollup-plugin-cleanup';
 import {terser} from 'rollup-plugin-terser';
 
-const out_dir = 'src/yafowil/widget/cron/resources';
+const out_dir = 'src/yafowil/widget/image/resources';
 
 const outro = `
 if (window.yafowil === undefined) {
@@ -17,6 +17,7 @@ export default args => {
             cleanup()
         ],
         output: [{
+            name: 'yafowil.image',
             file: `${out_dir}/widget.js`,
             format: 'iife',
             outro: outro,
@@ -33,6 +34,7 @@ export default args => {
     };
     if (args.configDebug !== true) {
         conf.output.push({
+            name: 'yafowil.image',
             file: `${out_dir}/widget.min.js`,
             format: 'iife',
             plugins: [

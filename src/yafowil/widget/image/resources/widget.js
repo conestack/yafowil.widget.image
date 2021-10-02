@@ -1,45 +1,52 @@
-/*
- * yafowil image widget
- */
+this.yafowil = this.yafowil || {};
+this.yafowil.image = (function (exports, $) {
+    'use strict';
 
-if (typeof(window['yafowil']) == "undefined") yafowil = {};
-
-(function($) {
-
-    $(document).ready(function() {
-        // initial binding
-        yafowil.image.binder();
-        
-        // add after ajax binding if bdajax present
-        if (typeof(window['bdajax']) != "undefined") {
-            $.extend(bdajax.binders, {
-                imagewidget_binder: yafowil.image.binder
+    class ImageWidget {
+        static initialize(context) {
+            $('input.image', context).each(function (event) {
+                new ImageWidget($(this));
             });
         }
-    });
-    
-    $.extend(yafowil, {
-        
-        image: {
-            
-            binder: function(context) {
-                // XXX: file needs anyway, provide in yafowil directly?
-                $('input.file').bind('change', function(evt) {
-                    var elem = $(this);
-                    if (elem.attr('type') == 'radio') {
-                        return true;
-                    }
-                    $('input.file[value="replace"]').trigger('click');
-                });
-                $('input.image').bind('change', function(evt) {
-                    var elem = $(this);
-                    if (elem.attr('type') == 'radio') {
-                        return true;
-                    }
-                    $('input.image[value="replace"]').trigger('click');
-                });
-            }
+        constructor(elem) {
+            this.elem = elem;
+            $('input.file').bind('change', function (evt) {
+                let elem = $(this);
+                if (elem.attr('type') === 'radio') {
+                    return true;
+                }
+                $('input.file[value="replace"]').trigger('click');
+            });
+            $('input.image').bind('change', function (evt) {
+                let elem = $(this);
+                if (elem.attr('type') === 'radio') {
+                    return true;
+                }
+                $('input.image[value="replace"]').trigger('click');
+            });
+        }
+    }
+
+    $(function() {
+        if (window.ts !== undefined) {
+            ts.ajax.register(ImageWidget.initialize, true);
+        } else {
+            ImageWidget.initialize();
         }
     });
 
-})(jQuery);
+    exports.ImageWidget = ImageWidget;
+
+    Object.defineProperty(exports, '__esModule', { value: true });
+
+
+    if (window.yafowil === undefined) {
+        window.yafowil = {};
+    }
+    window.yafowil.image = exports;
+
+
+    return exports;
+
+})({}, jQuery);
+//# sourceMappingURL=widget.js.map
