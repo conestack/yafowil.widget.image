@@ -17,7 +17,6 @@ export default args => {
             cleanup()
         ],
         output: [{
-            name: 'yafowil.image',
             file: `${out_dir}/widget.js`,
             format: 'iife',
             outro: outro,
@@ -34,7 +33,6 @@ export default args => {
     };
     if (args.configDebug !== true) {
         conf.output.push({
-            name: 'yafowil.image',
             file: `${out_dir}/widget.min.js`,
             format: 'iife',
             plugins: [

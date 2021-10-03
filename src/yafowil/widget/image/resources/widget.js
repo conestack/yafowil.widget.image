@@ -1,5 +1,4 @@
-this.yafowil = this.yafowil || {};
-this.yafowil.image = (function (exports, $) {
+(function (exports, $) {
     'use strict';
 
     class ImageWidget {
