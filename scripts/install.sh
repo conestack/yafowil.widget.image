@@ -25,4 +25,7 @@ npm --no-save install https://github.com/jquery/jquery#main
 
 python3 -m venv .
 ./bin/pip install wheel
+./bin/pip install Pillow
+./bin/pip install coverage
+./bin/pip install yafowil[test]
 ./bin/pip install -e .[test]

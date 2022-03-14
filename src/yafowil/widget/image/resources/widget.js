@@ -1,4 +1,4 @@
-(function (exports, $) {
+var yafowil_image = (function (exports, $) {
     'use strict';
 
     class ImageWidget {
@@ -48,4 +48,3 @@
     return exports;
 
 })({}, jQuery);
-//# sourceMappingURL=widget.js.map
