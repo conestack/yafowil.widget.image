@@ -10,15 +10,16 @@ export class ImageWidget {
 
     constructor(elem) {
         this.elem = elem;
+        elem.data('yafowil-image', this);
         // XXX: file needs anyway, provide in yafowil directly?
-        $('input.file').bind('change', function (evt) {
+        $('input.file').on('change', function (evt) {
             let elem = $(this);
             if (elem.attr('type') === 'radio') {
                 return true;
             }
             $('input.file[value="replace"]').trigger('click');
         });
-        $('input.image').bind('change', function (evt) {
+        $('input.image').on('change', function (evt) {
             let elem = $(this);
             if (elem.attr('type') === 'radio') {
                 return true;

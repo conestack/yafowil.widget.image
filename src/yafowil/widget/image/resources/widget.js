@@ -9,14 +9,15 @@ var yafowil_image = (function (exports, $) {
         }
         constructor(elem) {
             this.elem = elem;
-            $('input.file').bind('change', function (evt) {
+            elem.data('yafowil-image', this);
+            $('input.file').on('change', function (evt) {
                 let elem = $(this);
                 if (elem.attr('type') === 'radio') {
                     return true;
                 }
                 $('input.file[value="replace"]').trigger('click');
             });
-            $('input.image').bind('change', function (evt) {
+            $('input.image').on('change', function (evt) {
                 let elem = $(this);
                 if (elem.attr('type') === 'radio') {
                     return true;
