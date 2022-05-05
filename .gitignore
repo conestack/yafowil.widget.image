@@ -7,8 +7,9 @@
 /develop-eggs/
 /parts/
 /bin/
-/eggs/
 /downloads/
+/eggs/
+/include/
 /var/
 /dist/
 /.installed.cfg
