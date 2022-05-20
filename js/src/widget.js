@@ -9,8 +9,8 @@ export class ImageWidget {
     }
 
     constructor(elem) {
-        this.elem = elem;
         elem.data('yafowil-image', this);
+        this.elem = elem;
         // XXX: file needs anyway, provide in yafowil directly?
         $('input.file').on('change', function (evt) {
             let elem = $(this);
