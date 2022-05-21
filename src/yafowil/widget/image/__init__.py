@@ -1,9 +1,40 @@
 from yafowil.base import factory
 from yafowil.utils import entry_point
 import os
+import webresource as wr
 
 
-resourcedir = os.path.join(os.path.dirname(__file__), 'resources')
+resources_dir = os.path.join(os.path.dirname(__file__), 'resources')
+
+
+##############################################################################
+# Default
+##############################################################################
+
+# webresource ################################################################
+
+scripts = wr.ResourceGroup(name='scripts')
+scripts.add(wr.ScriptResource(
+    name='yafowil-image-js',
+    depends='jquery-js',
+    directory=resources_dir,
+    resource='widget.js',
+    compressed='widget.min.js'
+))
+
+styles = wr.ResourceGroup(name='styles')
+styles.add(wr.StyleResource(
+    name='yafowil-image-css',
+    directory=resources_dir,
+    resource='widget.css'
+))
+
+resources = wr.ResourceGroup(name='image-resources')
+resources.add(scripts)
+resources.add(styles)
+
+# B/C resources ##############################################################
+
 js = [{
     'group': 'yafowil.widget.image.common',
     'resource': 'widget.js',
@@ -16,8 +47,16 @@ css = [{
 }]
 
 
+##############################################################################
+# Registration
+##############################################################################
+
 @entry_point(order=10)
 def register():
     from yafowil.widget.image import widget  # noqa
-    factory.register_theme('default', 'yafowil.widget.image',
-                           resourcedir, js=js, css=css)
+
+    # Default
+    factory.register_theme(
+        'default', 'yafowil.widget.image', resources_dir,
+        js=js, css=css, resources=resources
+    )
