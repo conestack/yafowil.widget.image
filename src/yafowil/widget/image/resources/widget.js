@@ -8,8 +8,8 @@ var yafowil_image = (function (exports, $) {
             });
         }
         constructor(elem) {
-            this.elem = elem;
             elem.data('yafowil-image', this);
+            this.elem = elem;
             $('input.file').on('change', function (evt) {
                 let elem = $(this);
                 if (elem.attr('type') === 'radio') {
@@ -30,6 +30,8 @@ var yafowil_image = (function (exports, $) {
     $(function() {
         if (window.ts !== undefined) {
             ts.ajax.register(ImageWidget.initialize, true);
+        } else if (window.bdajax !== undefined) {
+            bdajax.register(ImageWidget.initialize, true);
         } else {
             ImageWidget.initialize();
         }
@@ -40,9 +42,7 @@ var yafowil_image = (function (exports, $) {
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    if (window.yafowil === undefined) {
-        window.yafowil = {};
-    }
+    window.yafowil = window.yafowil || {};
     window.yafowil.image = exports;
 
 
