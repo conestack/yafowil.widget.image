@@ -13,7 +13,7 @@ resources_dir = os.path.join(os.path.dirname(__file__), 'resources')
 
 # webresource ################################################################
 
-scripts = wr.ResourceGroup(name='scripts')
+scripts = wr.ResourceGroup(name='yafowil-image-scripts')
 scripts.add(wr.ScriptResource(
     name='yafowil-image-js',
     depends='jquery-js',
@@ -22,16 +22,12 @@ scripts.add(wr.ScriptResource(
     compressed='widget.min.js'
 ))
 
-styles = wr.ResourceGroup(name='styles')
+styles = wr.ResourceGroup(name='yafowil-image-styles')
 styles.add(wr.StyleResource(
     name='yafowil-image-css',
     directory=resources_dir,
     resource='widget.css'
 ))
-
-resources = wr.ResourceGroup(name='image-resources')
-resources.add(scripts)
-resources.add(styles)
 
 # B/C resources ##############################################################
 
@@ -58,5 +54,7 @@ def register():
     # Default
     factory.register_theme(
         'default', 'yafowil.widget.image', resources_dir,
-        js=js, css=css, resources=resources
+        js=js, css=css
     )
+    factory.register_scripts('default', 'yafowil.widget.image', scripts)
+    factory.register_styles('default', 'yafowil.widget.image', styles)
