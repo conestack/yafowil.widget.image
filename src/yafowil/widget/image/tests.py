@@ -89,7 +89,7 @@ class TestImageWidget(YafowilTestCase):
                 'action': 'myaction'
             })
         form['image'] = factory('image')
-        self.check_output("""
+        self.checkOutput("""
         <form action="myaction" enctype="multipart/form-data" id="form-myform"
               method="post" novalidate="novalidate">
           <input accept="image/*" class="image" id="input-myform-image"
@@ -111,7 +111,7 @@ class TestImageWidget(YafowilTestCase):
                 'file': StringIO(self.dummy_png),
                 'mimetype': 'image/png'
             })
-        self.check_output("""
+        self.checkOutput("""
         <form action="myaction" enctype="multipart/form-data" id="form-myform"
               method="post" novalidate="novalidate">
           <input accept="image/*" class="image" id="input-myform-image"
@@ -153,7 +153,7 @@ class TestImageWidget(YafowilTestCase):
                 'src': 'http://www.example.com/someimage.png',
                 'alt': 'Alternative text'
             })
-        self.check_output("""
+        self.checkOutput("""
         <form action="myaction" enctype="multipart/form-data" id="form-myform"
               method="post" novalidate="novalidate">
           <img alt="Alternative text" class="image-preview"
@@ -183,7 +183,7 @@ class TestImageWidget(YafowilTestCase):
                 'src': 'http://www.example.com/someimage?format=png',
                 'alt': 'Alternative text'
             })
-        self.check_output("""
+        self.checkOutput("""
         <form action="myaction" enctype="multipart/form-data" id="form-myform"
               method="post" novalidate="novalidate">
           <img alt="Alternative text" class="image-preview"
@@ -213,7 +213,7 @@ class TestImageWidget(YafowilTestCase):
                 'src': lambda w, d: 'http://www.example.com/otherimage.png',
                 'alt': 'Alternative text'
             })
-        self.check_output("""
+        self.checkOutput("""
         <form action="myaction" enctype="multipart/form-data" id="form-myform"
               method="post" novalidate="novalidate">
           <img alt="Alternative text" class="image-preview"
@@ -244,7 +244,7 @@ class TestImageWidget(YafowilTestCase):
                 'alt': 'Alternative text'
             },
             mode='display')
-        self.check_output("""
+        self.checkOutput("""
         <form action="myaction" enctype="multipart/form-data" id="form-myform"
               method="post" novalidate="novalidate">
           <img alt="Alternative text"
@@ -254,7 +254,7 @@ class TestImageWidget(YafowilTestCase):
 
         # Rendering is skipped if no source
         form['image'].attrs['src'] = None
-        self.check_output("""
+        self.checkOutput("""
         <form action="myaction" enctype="multipart/form-data"
               id="form-myform" method="post" novalidate="novalidate"/>
         """, fxml(form()))
@@ -282,7 +282,7 @@ class TestImageWidget(YafowilTestCase):
         })
         self.assertEqual(data.errors, [])
         self.assertEqual(data.value, UNSET)
-        self.check_output("""
+        self.checkOutput("""
         [('action', 'new'),
         ('file', <... at ...>),
         ('image', <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>),
@@ -306,13 +306,13 @@ class TestImageWidget(YafowilTestCase):
             'image-action': 'keep'
         })
         self.assertEqual(data.errors, [])
-        self.check_output("""
+        self.checkOutput("""
         [('action', 'keep'),
         ('file', <... at ...>),
         ('image', <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>),
         ('mimetype', 'image/png')]
         """, str(sorted(data.value.items())))
-        self.check_output("""
+        self.checkOutput("""
         [('action', 'keep'),
         ('file', <... at ...>),
         ('image', <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>),
@@ -339,12 +339,12 @@ class TestImageWidget(YafowilTestCase):
             'image-action': 'replace'
         })
         self.assertEqual(data.errors, [])
-        self.check_output("""
+        self.checkOutput("""
         [('action', 'replace'),
         ('file', <... at ...>),
         ('mimetype', 'image/png')]
         """, str(sorted(data.value.items())))
-        self.check_output("""
+        self.checkOutput("""
         [('action', 'replace'),
         ('file', <... at ...>),
         ('image', <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=50x50 at ...>),
@@ -371,12 +371,12 @@ class TestImageWidget(YafowilTestCase):
             'image-action': 'delete'
         })
         self.assertEqual(data.errors, [])
-        self.check_output("""
+        self.checkOutput("""
         [('action', 'delete'),
         ('file', <UNSET>),
         ('mimetype', 'image/png')]
         """, str(sorted(data.value.items())))
-        self.check_output("""
+        self.checkOutput("""
         [('action', 'delete'),
         ('file', <UNSET>),
         ('mimetype', 'image/png')]
@@ -396,7 +396,7 @@ class TestImageWidget(YafowilTestCase):
                 'mimetype': 'image/jpg'
             }
         })
-        self.check_output("""
+        self.checkOutput("""
         [('action', 'new'),
         ('file', <... at ...>),
         ('image', <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=50x50 at ...),
@@ -417,12 +417,9 @@ class TestImageWidget(YafowilTestCase):
                 'mimetype': 'image/jpg'
             }
         }
-        err = self.expect_error(
-            ValueError,
-            image.extract,
-            request
-        )
-        self.assertEqual(str(err), 'Incompatible mimetype text/*')
+        with self.assertRaises(ValueError) as arc:
+            image.extract(request)
+        self.assertEqual(str(arc.exception), 'Incompatible mimetype text/*')
 
     def test_extract_mimetype_wrong_type(self):
         image = factory(
@@ -455,7 +452,7 @@ class TestImageWidget(YafowilTestCase):
                 'mimetype': 'image/jpg'
             }
         })
-        self.check_output("""
+        self.checkOutput("""
         [('action', 'new'),
         ('file', <... at ...>),
         ('image', <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=50x50 at ...>),
@@ -484,7 +481,7 @@ class TestImageWidget(YafowilTestCase):
     def test_extract_from_image_foundations(self):
         buffer = StringIO(self.dummy_png)
         image = PIL.Image.open(buffer)
-        self.check_output("""
+        self.checkOutput("""
         <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>
         """, str(image))
         buffer.seek(0)
@@ -688,13 +685,13 @@ class TestImageWidget(YafowilTestCase):
         )
         self.assertEqual(data.extracted['action'], 'new')
         self.assertEqual(data.extracted['mimetype'], 'image/png')
-        self.check_output("""
+        self.checkOutput("""
         <... at ...>
         """, str(data.extracted['file']))
-        self.check_output("""
+        self.checkOutput("""
         <PIL.PngImagePlugin.PngImageFile image mode=RGBA size=50x50 at ...>
         """, str(data.extracted['image']))
-        self.check_output("""
+        self.checkOutput("""
         [('landscape', <PIL.Image.Image image mode=RGBA size=40x40 at ...>),
         ('micro', <PIL.Image.Image image mode=RGBA size=20x20 at ...>),
         ('portrait', <PIL.Image.Image image mode=RGBA size=40x40 at ...>)]
@@ -770,7 +767,7 @@ class TestImageWidget(YafowilTestCase):
             }
         }
         data = image.extract(request)
-        self.check_output("""
+        self.checkOutput("""
         [('action', 'new'),
         ('cropped', <PIL.Image.Image image mode=RGBA size=20x20 at ...>),
         ('file', <... at ...>),
@@ -799,7 +796,7 @@ class TestImageWidget(YafowilTestCase):
             }
         }
         data = image.extract(request)
-        self.check_output("""
+        self.checkOutput("""
         [('action', 'new'),
         ('cropped', <PIL.Image.Image image mode=RGBA size=40x20 at ...>),
         ('file', <... at ...>),
@@ -832,7 +829,7 @@ class TestImageWidget(YafowilTestCase):
             }
         }
         data = image.extract(request)
-        self.check_output("""
+        self.checkOutput("""
         [('action', 'new'),
         ('cropped', <PIL.Image.Image image mode=RGBA size=20x40 at ...>),
         ('file', <... at ...>),
@@ -866,7 +863,7 @@ class TestImageWidget(YafowilTestCase):
             }
         }
         data = image.extract(request)
-        self.check_output("""
+        self.checkOutput("""
         [('action', 'new'),
         ('cropped', <PIL.Image.Image image mode=RGBA size=20x40 at ...>),
         ('file', <... at ...>),
@@ -896,7 +893,7 @@ class TestImageWidget(YafowilTestCase):
             }
         }
         data = image.extract(request)
-        self.check_output("""
+        self.checkOutput("""
         [('action', 'new'),
         ('cropped', <PIL.Image.Image image mode=RGBA size=50x20 at ...>),
         ('file', <... at ...>),
@@ -931,7 +928,7 @@ class TestImageWidget(YafowilTestCase):
             }
         }
         data = image.extract(request)
-        self.check_output("""
+        self.checkOutput("""
         [('action', 'new'),
         ('cropped', <PIL.Image.Image image mode=RGBA size=30x18 at ...>),
         ('file', <... at ...>),
@@ -966,7 +963,7 @@ class TestImageWidget(YafowilTestCase):
             },
         }
         data = image.extract(request)
-        self.check_output("""
+        self.checkOutput("""
         [('action', 'new'),
         ('cropped', <PIL.Image.Image image mode=RGBA size=18x30 at ...>),
         ('file', <... at ...>),
@@ -1001,7 +998,7 @@ class TestImageWidget(YafowilTestCase):
             }
         }
         data = image.extract(request)
-        self.check_output("""
+        self.checkOutput("""
         [('action', 'new'),
         ('cropped', <PIL.Image.Image image mode=RGBA size=30x18 at ...>),
         ('file', <... at ...>),
@@ -1036,7 +1033,7 @@ class TestImageWidget(YafowilTestCase):
             }
         }
         data = image.extract(request)
-        self.check_output("""
+        self.checkOutput("""
         [('action', 'new'),
         ('cropped', <PIL.Image.Image image mode=RGBA size=18x30 at ...>),
         ('file', <... at ...>),
@@ -1066,7 +1063,7 @@ class TestImageWidget(YafowilTestCase):
             }
         }
         data = image.extract(request)
-        self.check_output("""
+        self.checkOutput("""
         [('action', 'new'),
         ('cropped', <PIL.Image.Image image mode=RGBA size=30x30 at ...>),
         ('file', <... at ...>),
@@ -1096,7 +1093,7 @@ class TestImageWidget(YafowilTestCase):
             }
         }
         data = image.extract(request)
-        self.check_output("""
+        self.checkOutput("""
         [('action', 'new'),
         ('cropped', <PIL.Image.Image image mode=RGBA size=40x50 at ...>),
         ('file', <... at ...>),
@@ -1126,7 +1123,7 @@ class TestImageWidget(YafowilTestCase):
             }
         }
         data = image.extract(request)
-        self.check_output("""
+        self.checkOutput("""
         [('action', 'new'),
         ('cropped', <PIL.Image.Image image mode=RGBA size=48x40 at ...>),
         ('file', <... at ...>),
