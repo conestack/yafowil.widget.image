@@ -15,7 +15,6 @@ longdesc = '\n\n'.join([read_file(name) for name in [
     'CHANGES.rst',
     'LICENSE.rst'
 ]])
-tests_require = ['yafowil[test]']
 
 
 setup(
@@ -45,13 +44,18 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
+        'Pillow',
         'setuptools',
-        'yafowil>2.1.99',
+        'yafowil>2.1.99'
     ],
-    tests_require=tests_require,
-    extras_require=dict(
-        test=tests_require,
-    ),
+    tests_require=[
+        'lxml',
+        'zope.testrunner'
+    ],
+    extras_require=dict(test=[
+        'lxml',
+        'zope.testrunner'
+    ]),
     test_suite="yafowil.widget.image.tests",
     entry_points="""
     [yafowil.plugin]

@@ -1156,6 +1156,7 @@ class TestImageWidget(YafowilTestCase):
         factory.theme = 'default'
         resources = factory.get_resources('yafowil.widget.image')
         self.assertTrue(resources.directory.endswith(np('/image/resources')))
+        self.assertEqual(resources.name, 'yafowil.widget.image')
         self.assertEqual(resources.path, 'yafowil-image')
 
         scripts = resources.scripts
