@@ -1,8 +1,11 @@
 Changes
 =======
 
-1.6 (unreleased)
+2.0 (unreleased)
 ----------------
+
+- Rewrite JavaScript using ES6.
+  [rnix]
 
 - Introduce ``rounddpi`` flag for image blueprint. Pillow, as of version 6.0,
   no longer rounds reported DPI values for BMP, JPEG and PNG images, but image
