@@ -51,7 +51,8 @@ class TestImageWidget(YafowilTestCase):
     def setUp(self):
         super(TestImageWidget, self).setUp()
         from yafowil.widget import image
-        reload(image.widget)
+        from yafowil.widget.image import widget
+        reload(widget)
         image.register()
 
     def dummy_file_data(self, filename):
