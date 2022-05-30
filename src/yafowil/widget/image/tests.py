@@ -8,10 +8,10 @@ from yafowil.tests import YafowilTestCase
 from yafowil.widget.image.utils import aspect_ratio_approximate
 from yafowil.widget.image.utils import same_aspect_ratio
 from yafowil.widget.image.utils import scale_size
+import os
 import PIL
 import pkg_resources
 import unittest
-import yafowil.loader  # noqa
 
 
 if IS_PY2:
@@ -19,6 +19,10 @@ if IS_PY2:
 else:
     from importlib import reload
     from io import BytesIO as StringIO
+
+
+def np(path):
+    return path.replace('/', os.path.sep)
 
 
 class TestUtils(unittest.TestCase):
@@ -46,8 +50,9 @@ class TestImageWidget(YafowilTestCase):
 
     def setUp(self):
         super(TestImageWidget, self).setUp()
-        from yafowil.widget.image import widget
-        reload(widget)
+        from yafowil.widget import image
+        reload(image.widget)
+        image.register()
 
     def dummy_file_data(self, filename):
         path = pkg_resources.resource_filename(
@@ -1145,6 +1150,28 @@ class TestImageWidget(YafowilTestCase):
         data = out.read()
         self.assertTrue(data.startswith(b'\x89PNG\r\n'))
         self.assertTrue(data.endswith(b'\x00IEND\xaeB`\x82'))
+
+    def test_resources(self):
+        factory.theme = 'default'
+        resources = factory.get_resources('yafowil.widget.image')
+        self.assertTrue(resources.directory.endswith(np('/image/resources')))
+        self.assertEqual(resources.path, 'yafowil-image')
+
+        scripts = resources.scripts
+        self.assertEqual(len(scripts), 1)
+
+        self.assertTrue(scripts[0].directory.endswith(np('/image/resources')))
+        self.assertEqual(scripts[0].path, 'yafowil-image')
+        self.assertEqual(scripts[0].file_name, 'widget.min.js')
+        self.assertTrue(os.path.exists(scripts[0].file_path))
+
+        styles = resources.styles
+        self.assertEqual(len(styles), 1)
+
+        self.assertTrue(styles[0].directory.endswith(np('/image/resources')))
+        self.assertEqual(styles[0].path, 'yafowil-image')
+        self.assertEqual(styles[0].file_name, 'widget.css')
+        self.assertTrue(os.path.exists(styles[0].file_path))
 
 
 if __name__ == '__main__':
