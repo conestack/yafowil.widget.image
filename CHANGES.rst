@@ -1,7 +1,7 @@
 Changes
 =======
 
-1.6 (unreleased)
+1.6 (2022-10-06)
 ----------------
 
 - Introduce ``rounddpi`` flag for image blueprint. Pillow, as of version 6.0,
