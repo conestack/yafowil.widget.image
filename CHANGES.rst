@@ -1,8 +1,11 @@
 Changes
 =======
 
-2.0 (unreleased)
-----------------
+2.0a1 (unreleased)
+------------------
+
+- Add ``webresource`` support.
+  [rnix]
 
 - Rewrite JavaScript using ES6.
   [rnix]
