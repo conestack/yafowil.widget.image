@@ -180,7 +180,7 @@ def scales_extractor(widget, data):
         # scale y
         if image_appr < scale_appr:
             image_size = scale_size(image.size, (None, size[1]))
-        scaled_images[name] = image.resize(image_size, Image.LANCZOS)
+        scaled_images[name] = image.resize(image_size, Image.Resampling.LANCZOS)
     data.extracted['scales'] = scaled_images
     return data.extracted
 
@@ -206,17 +206,17 @@ def crop_extractor(widget, data):
     crop_appr = aspect_ratio_approximate(size)
     if fitting:
         if same_aspect_ratio(size, image.size):
-            image = image.resize(size, Image.LANCZOS)
+            image = image.resize(size, Image.Resampling.LANCZOS)
             offset = (0, 0)
         # scale x
         if image_appr < crop_appr:
             image_size = scale_size(image.size, (size[0], None))
-            image = image.resize(image_size, Image.LANCZOS)
+            image = image.resize(image_size, Image.Resampling.LANCZOS)
             offset = (0, (image_size[1] - size[1]) / 2)
         # scale y
         if image_appr > crop_appr:
             image_size = scale_size(image.size, (None, size[1]))
-            image = image.resize(image_size, Image.LANCZOS)
+            image = image.resize(image_size, Image.Resampling.LANCZOS)
             offset = ((image_size[0] - size[0]) / 2, 0)
     image = image.crop(
         (offset[0], offset[1], size[0] + offset[0], size[1] + offset[1]))
