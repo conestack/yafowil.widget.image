@@ -2,10 +2,10 @@ from PIL import Image
 from node.utils import UNSET
 from yafowil.base import ExtractionError
 from yafowil.base import factory
-from yafowil.common import file_extractor
-from yafowil.common import file_options_renderer
 from yafowil.common import generic_required_extractor
-from yafowil.common import input_file_edit_renderer
+from yafowil.file import file_extractor
+from yafowil.file import file_options_renderer
+from yafowil.file import input_file_edit_renderer
 from yafowil.tsf import TSF
 from yafowil.utils import attr_value
 from yafowil.utils import css_managed_props
