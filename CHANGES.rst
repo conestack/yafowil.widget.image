@@ -1,7 +1,7 @@
 Changes
 =======
 
-2.0a2 (unreleased)
+2.0a2 (2024-05-23)
 ------------------
 
 - Fix deprecated imports.
