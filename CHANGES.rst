@@ -4,7 +4,11 @@ Changes
 2.0a2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Fix deprecated imports.
+  [rnix]
+
+- Use Image.Resampling.LANCZOS instead of ANTIALIAS.
+  [rnix]
 
 
 2.0a1 (2023-05-15)
