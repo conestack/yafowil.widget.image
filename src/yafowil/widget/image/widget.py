@@ -274,6 +274,10 @@ factory.defaults['image.vocabulary'] = [
     ('delete', u'Delete existing image'),
 ]
 
+factory.defaults['image.radio_class'] = ''
+
+factory.defaults['image.radio_input_class'] = ''
+
 factory.defaults['image.alt'] = ''
 factory.doc['props']['image.alt'] = """\
 Image alternative text.
