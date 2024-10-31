@@ -48,15 +48,10 @@ setup(
         'setuptools',
         'yafowil>2.1.99'
     ],
-    tests_require=[
-        'lxml',
-        'zope.testrunner'
-    ],
     extras_require=dict(test=[
         'lxml',
-        'zope.testrunner'
+        'pytest'
     ]),
-    test_suite="yafowil.widget.image.tests",
     entry_points="""
     [yafowil.plugin]
     register = yafowil.widget.image:register
