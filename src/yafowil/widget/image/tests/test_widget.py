@@ -1163,7 +1163,7 @@ class TestImageWidget(YafowilTestCase):
         self.assertEqual(len(scripts), 1)
 
         self.assertTrue(scripts[0].directory.endswith(np('/image/resources/default')))
-        self.assertEqual(scripts[0].path, 'yafowil-image')
+        self.assertEqual(scripts[0].path, 'yafowil-image/default')
         self.assertEqual(scripts[0].file_name, 'widget.min.js')
         self.assertTrue(os.path.exists(scripts[0].file_path))
 
@@ -1171,7 +1171,7 @@ class TestImageWidget(YafowilTestCase):
         self.assertEqual(len(styles), 1)
 
         self.assertTrue(styles[0].directory.endswith(np('/image/resources/default')))
-        self.assertEqual(styles[0].path, 'yafowil-image')
+        self.assertEqual(styles[0].path, 'yafowil-image/default')
         self.assertEqual(styles[0].file_name, 'widget.min.css')
         self.assertTrue(os.path.exists(styles[0].file_path))
 

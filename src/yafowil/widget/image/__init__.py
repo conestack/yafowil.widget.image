@@ -21,6 +21,7 @@ resources = wr.ResourceGroup(
 resources.add(wr.ScriptResource(
     name='yafowil-image-js',
     directory=os.path.join(resources_dir, 'default'),
+    path='yafowil-image/default',
     depends='jquery-js',
     resource='widget.js',
     compressed='widget.min.js'
@@ -28,6 +29,7 @@ resources.add(wr.ScriptResource(
 resources.add(wr.StyleResource(
     name='yafowil-image-css',
     directory=os.path.join(resources_dir, 'default'),
+    path='yafowil-image/default',
     resource='widget.min.css'
 ))
 
