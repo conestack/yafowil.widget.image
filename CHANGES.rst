@@ -4,7 +4,14 @@ Changes
 2.0a3 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Update yafowil version to 3.1.1.
+  [lenadax]
+
+- Add support for bootstrap5 theme.
+  [lenadax]
+
+- Streamline JS package structure.
+  [lenadax]
 
 
 2.0a2 (2024-05-23)
