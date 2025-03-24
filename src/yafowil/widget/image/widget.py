@@ -232,6 +232,7 @@ def image_display_renderer(widget, data):
         img_attrs = {
             'src': src,
             'alt': attr_value('alt', widget, data),
+            'class_': attr_value("display_class", widget, data)
         }
         return tag('img', **img_attrs)
     return ''
