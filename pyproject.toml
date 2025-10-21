@@ -1,0 +1,48 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "yafowil.widget.image"
+version = "2.0a3.dev0"
+description = "Image Widget for YAFOWIL"
+readme = "README.rst"
+license = {text = "Simplified BSD"}
+authors = [{name = "Yafowil Contributors", email = "dev@conestack.org"}]
+classifiers = [
+    "Environment :: Web Environment",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+    "License :: OSI Approved :: BSD License",
+    "Programming Language :: Python :: 2.7",
+    "Programming Language :: Python :: 3.5",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+]
+dependencies = [
+    "Pillow",
+    "yafowil>2.1.99",
+]
+
+[project.optional-dependencies]
+test = [
+    "lxml",
+    "pytest",
+]
+
+[project.entry-points."yafowil.plugin"]
+register = "yafowil.widget.image:register"
+example = "yafowil.widget.image.example:get_example"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools]
+zip-safe = false
+
+[tool.setuptools.package-dir]
+"" = "src"
+
+[tool.zest-releaser]
+create-wheel = true
