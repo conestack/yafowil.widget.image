@@ -148,5 +148,78 @@ def image():
     }
 
 
+DOC_DISPLAY = """
+Display Mode
+------------
+
+The widget's display mode renders the selected image inside an ``<img>`` tag.
+
+The img tag can receive additional classes via the ``display_class``
+widget attribute.
+
+Select an Image in the widget **above** to view it in display mode.
+
+.. code-block:: python
+
+    name = 'yafowil.widget.image.display'
+    image_name = name + '.jpg'
+    image_path = os.path.join(runtime_images_dir, image_name)
+    image_value = UNSET
+    if os.path.exists(image_path):
+        image_data = read_image(name)
+        image_value = {
+            'file': StringIO(image_data),
+            'mimetype': 'image/jpg',
+        }
+    form = factory('fieldset', name=name)
+    form['image'] = factory('#field:image', value=image_value, mode='display', props={
+        'label': 'Image',
+        'required': 'No Image uploaded',
+        'maxsize': (1024, 768),
+        'scales': {'default': (400, 400)},
+        'src': image_name,
+        'error.class': 'help-block',
+        'display_class': 'd-block border rounded'
+    })
+"""
+
+
+def image_display():
+    name = 'yafowil.widget.image.display'
+    src_name = 'yafowil.widget.image.image'
+    image_name = src_name + '.jpg'
+    image_path = os.path.join(runtime_images_dir(), image_name)
+
+    def get_value(widget, data):
+        image_value = UNSET
+        if os.path.exists(image_path):
+            image_data = read_image(name)
+            image_value = {
+                'file': StringIO(image_data),
+                'mimetype': 'image/jpg',
+            }
+        return image_value
+
+    def get_src(widget, data):
+        if os.path.exists(image_path):
+            return image_name
+
+    form = factory('fieldset', name=name)
+    form['image'] = factory('#field:image', value=get_value, mode='display', props={
+        'label': 'Image in display mode',
+        'required': 'No Image uploaded',
+        'maxsize': (1024, 768),
+        'scales': {'default': (400, 400)},
+        'src': get_src,
+        'error.class': 'help-block',
+        'display_class': 'd-block border rounded'
+    })
+    return {
+        'widget': form,
+        'doc': DOC_DISPLAY,
+        'title': 'Display Mode',
+    }
+
+
 def get_example():
-    return [image()]
+    return [image(), image_display()]

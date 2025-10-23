@@ -1162,18 +1162,61 @@ class TestImageWidget(YafowilTestCase):
         scripts = resources.scripts
         self.assertEqual(len(scripts), 1)
 
-        self.assertTrue(scripts[0].directory.endswith(np('/image/resources')))
-        self.assertEqual(scripts[0].path, 'yafowil-image')
+        self.assertTrue(scripts[0].directory.endswith(np('/image/resources/default')))
+        self.assertEqual(scripts[0].path, 'yafowil-image/default')
         self.assertEqual(scripts[0].file_name, 'widget.min.js')
         self.assertTrue(os.path.exists(scripts[0].file_path))
 
         styles = resources.styles
         self.assertEqual(len(styles), 1)
 
-        self.assertTrue(styles[0].directory.endswith(np('/image/resources')))
-        self.assertEqual(styles[0].path, 'yafowil-image')
-        self.assertEqual(styles[0].file_name, 'widget.css')
+        self.assertTrue(styles[0].directory.endswith(np('/image/resources/default')))
+        self.assertEqual(styles[0].path, 'yafowil-image/default')
+        self.assertEqual(styles[0].file_name, 'widget.min.css')
         self.assertTrue(os.path.exists(styles[0].file_path))
+
+    def test_image_radio_class(self):
+        # Image actions vocabulary with radio_input_class and radio_class
+        form = factory(
+            'form',
+            name='myform',
+            props={
+                'action': 'myaction'
+            })
+        form['image'] = factory(
+            'image',
+            name='MYIMAGE',
+            value={
+                'file': StringIO(self.dummy_png),
+                'mimetype': 'image/png'
+            },
+            props={
+                'radio_class': 'my_radio',
+                'radio_input_class': 'my_radio_input',
+                'vocabulary': [
+                    ('keep', 'Keep Existing file'),
+                    ('replace', 'Replace existing file')
+                ]
+            })
+
+        self.checkOutput("""
+        <form action="myaction" enctype="multipart/form-data" id="form-myform"
+              method="post" novalidate="novalidate">
+          <input accept="image/*" class="image" id="input-myform-image"
+                 name="myform.image" type="file"/>
+          <div class="my_radio" id="radio-myform-image-keep">
+            <input checked="checked" class="my_radio_input"
+                   id="input-myform-image-keep" name="myform.image-action"
+                   type="radio" value="keep"/>
+            <span>Keep Existing file</span>
+          </div>
+          <div class="my_radio" id="radio-myform-image-replace">
+            <input class="my_radio_input" id="input-myform-image-replace"
+                   name="myform.image-action" type="radio" value="replace"/>
+            <span>Replace existing file</span>
+          </div>
+        </form>
+        """, fxml(form()))
 
 
 if __name__ == '__main__':

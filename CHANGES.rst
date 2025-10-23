@@ -4,7 +4,29 @@ Changes
 2.0a3 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Update jQuery to version ``4.0.0-beta.2``.
+  [lenadax]
+
+- Add ``radio_class`` and ``radio_input_class`` options for Bootstrap 5 styling.
+  [lenadax]
+
+- Use rollup for bundling scss. Use ``make rollup`` to compile js and scss.
+  [lenadax]
+
+- Use ``webtestrunner`` instead of ``karma`` for js tests. Use ``make wtr`` to run tests.
+  [lenadax]
+
+- Use ``pnpm`` as package manager.
+  [lenadax]
+
+- Update yafowil version to 3.1.1.
+  [lenadax]
+
+- Add support for bootstrap5 theme.
+  [lenadax]
+
+- Streamline JS package structure.
+  [lenadax]
 
 
 2.0a2 (2024-05-23)

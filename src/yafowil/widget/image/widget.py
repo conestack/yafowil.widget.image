@@ -232,6 +232,7 @@ def image_display_renderer(widget, data):
         img_attrs = {
             'src': src,
             'alt': attr_value('alt', widget, data),
+            'class_': attr_value("display_class", widget, data)
         }
         return tag('img', **img_attrs)
     return ''
@@ -273,6 +274,10 @@ factory.defaults['image.vocabulary'] = [
     ('replace', u'Replace existing image'),
     ('delete', u'Delete existing image'),
 ]
+
+factory.defaults['image.radio_class'] = None
+
+factory.defaults['image.radio_input_class'] = None
 
 factory.defaults['image.alt'] = ''
 factory.doc['props']['image.alt'] = """\
