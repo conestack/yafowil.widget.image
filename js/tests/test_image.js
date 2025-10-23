@@ -1,4 +1,4 @@
-import {ImageWidget} from '../src/widget.js';
+import {ImageWidget} from '../src/default/widget.js';
 import $ from 'jquery';
 
 QUnit.test('initialize', assert => {

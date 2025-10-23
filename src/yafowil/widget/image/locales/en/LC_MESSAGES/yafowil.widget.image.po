@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: yafowil.widget.image 1.2dev\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2014-07-30 16:46+0200\n"
+"POT-Creation-Date: 2025-03-21 11:00+0100\n"
 "PO-Revision-Date: 2014-04-30 19:31+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: en <LL@li.org>\n"
@@ -21,41 +21,41 @@ msgstr ""
 "Generated-By: Babel 1.3\n"
 
 #. Default: Uploaded file is not an image.
-#: src/yafowil/widget/image/widget.py:64
+#: src/yafowil/widget/image/widget.py:54
 msgid "file_not_an_image"
 msgstr "Uploaded file is not an image."
 
 #. Default: Uploaded image not of type ${type}
-#: src/yafowil/widget/image/widget.py:70
+#: src/yafowil/widget/image/widget.py:60
 msgid "file_invalid_type"
 msgstr "Uploaded image not of type ${type}"
 
 #. Default: Image must have a size of ${width} x ${height} pixel
-#: src/yafowil/widget/image/widget.py:100
+#: src/yafowil/widget/image/widget.py:90
 msgid "exact_image_size_required"
 msgstr "Image must have a size of ${width} x ${height} pixel"
 
 #. Default: Image must have a minimum size of ${width} x ${height} pixel
-#: src/yafowil/widget/image/widget.py:110
+#: src/yafowil/widget/image/widget.py:100
 msgid "minimum_image_size_required"
 msgstr "Image must have a minimum size of ${width} x ${height} pixel"
 
 #. Default: Image must have a maximum size of ${width} x ${height} pixel
-#: src/yafowil/widget/image/widget.py:120
+#: src/yafowil/widget/image/widget.py:110
 msgid "maximum_image_size_required"
 msgstr "Image must have a maximum size of ${width} x ${height} pixel"
 
 #. Default: Image must have a resolution of ${width} x ${height} DPI
-#: src/yafowil/widget/image/widget.py:141
+#: src/yafowil/widget/image/widget.py:134
 msgid "exact_image_dpi_required"
 msgstr "Image must have a resolution of ${width} x ${height} DPI"
 
 #. Default: Image must have at least ${width} x ${height} DPI
-#: src/yafowil/widget/image/widget.py:151
+#: src/yafowil/widget/image/widget.py:144
 msgid "minimum_image_dpi_required"
 msgstr "Image must have at least ${width} x ${height} DPI"
 
 #. Default: Image must have a maximum of ${width} x ${height} DPI
-#: src/yafowil/widget/image/widget.py:161
+#: src/yafowil/widget/image/widget.py:154
 msgid "maximum_image_dpi_required"
 msgstr "Image must have a maximum of ${width} x ${height} DPI"

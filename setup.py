@@ -46,7 +46,7 @@ setup(
     install_requires=[
         'Pillow',
         'setuptools',
-        'yafowil>2.1.99'
+        'yafowil>=3.1.1'
     ],
     extras_require=dict(test=[
         'lxml',
