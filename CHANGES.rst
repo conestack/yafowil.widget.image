@@ -4,7 +4,8 @@ Changes
 1.7 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Pin upper versions of dependencies.
+  [lenadax]
 
 
 1.6 (2022-10-06)
