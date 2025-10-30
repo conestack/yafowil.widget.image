@@ -47,7 +47,7 @@ setup(
     install_requires=[
         'setuptools',
         'yafowil>2.1.99,<4.0.0',
-        'Pillow>=9.5.0'
+        'Pillow<=9.5.0'
     ],
     tests_require=tests_require,
     extras_require=dict(
