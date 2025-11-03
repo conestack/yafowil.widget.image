@@ -1,7 +1,7 @@
 Changes
 =======
 
-2.0a3 (unreleased)
+2.0.0 (unreleased)
 ------------------
 
 - Update jQuery to version ``4.0.0-beta.2``.
