@@ -26,8 +26,8 @@ def np(path):
 
 
 def file_path(name):
-    with importlib.resources.path('yafowil.widget.image') as base_path:
-        return str(base_path / 'testing' / name)
+    with importlib.resources.path('yafowil.widget.image', 'testing', name) as path:
+        return str(path)
 
 
 class TestUtils(unittest.TestCase):
