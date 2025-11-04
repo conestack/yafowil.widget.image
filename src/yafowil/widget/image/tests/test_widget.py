@@ -3,14 +3,14 @@ from node.utils import UNSET
 from yafowil.base import ExtractionError
 from yafowil.base import factory
 from yafowil.compat import IS_PY2
-from yafowil.tests import fxml
 from yafowil.tests import YafowilTestCase
+from yafowil.tests import fxml
 from yafowil.widget.image.utils import aspect_ratio_approximate
 from yafowil.widget.image.utils import same_aspect_ratio
 from yafowil.widget.image.utils import scale_size
-import os
 import PIL
-import pkg_resources
+import importlib
+import os
 import unittest
 
 
@@ -23,6 +23,11 @@ else:
 
 def np(path):
     return path.replace('/', os.path.sep)
+
+
+def file_path(name):
+    with importlib.resources.path('yafowil.widget.image') as base_path:
+        return str(base_path / 'testing' / name)
 
 
 class TestUtils(unittest.TestCase):
@@ -56,8 +61,7 @@ class TestImageWidget(YafowilTestCase):
         image.register()
 
     def dummy_file_data(self, filename):
-        path = pkg_resources.resource_filename(
-            'yafowil.widget.image', 'testing/%s' % filename)
+        path = file_path(filename)
         with open(path, 'rb') as file:
             data = file.read()
         return data
@@ -704,8 +708,7 @@ class TestImageWidget(YafowilTestCase):
         """, str(sorted(data.extracted['scales'].items())))
         # save images to testing folder for manual inspection
         for name, image in data.extracted['scales'].items():
-            path = pkg_resources.resource_filename(
-                'yafowil.widget.image', 'testing/%s.png' % name)
+            path = file_path('%s.png' % name)
             image.save(path, quality=100)
 
     def test_extract_from_image_cropping_foundations(self):
@@ -716,8 +719,7 @@ class TestImageWidget(YafowilTestCase):
         # save cropped image to testing folder for manual inspection
         left, top, width, height = 7, 3, 30, 40
         cropped = image.crop((left, top, width, height))
-        path = pkg_resources.resource_filename(
-            'yafowil.widget.image', 'testing/cropped.png')
+        path = file_path('cropped.png')
         cropped.save(path, quality=100)
         # fitting logic
         self.assertTrue(same_aspect_ratio((300, 200), (600, 400)))
@@ -781,8 +783,7 @@ class TestImageWidget(YafowilTestCase):
         ('mimetype', 'image/png')]
         """, str(sorted(data.extracted.items())))
         # save cropped image to testing folder for manual inspection
-        path = pkg_resources.resource_filename(
-            'yafowil.widget.image', 'testing/crop_size_20_20.png')
+        path = file_path('crop_size_20_20.png')
         data.extracted['cropped'].save(path, quality=100)
 
     def test_extract_crop_as_is_without_offset_40_20(self):
@@ -810,8 +811,7 @@ class TestImageWidget(YafowilTestCase):
         ('mimetype', 'image/png')]
         """, str(sorted(data.extracted.items())))
         # save cropped image to testing folder for manual inspection
-        path = pkg_resources.resource_filename(
-            'yafowil.widget.image', 'testing/crop_size_40_20.png')
+        path = file_path('crop_size_40_20.png')
         data.extracted['cropped'].save(path, quality=100)
 
         dummy_40_20_png = self.dummy_file_data('crop_size_40_20.png')
@@ -843,8 +843,7 @@ class TestImageWidget(YafowilTestCase):
         ('mimetype', 'image/png')]
         """, str(sorted(data.extracted.items())))
         # save cropped image to testing folder for manual inspection
-        path = pkg_resources.resource_filename(
-            'yafowil.widget.image', 'testing/crop_size_20_40.png')
+        path = file_path('crop_size_20_40.png')
         data.extracted['cropped'].save(path, quality=100)
 
         dummy_20_40_png = self.dummy_file_data('crop_size_20_40.png')
@@ -877,8 +876,7 @@ class TestImageWidget(YafowilTestCase):
         ('mimetype', 'image/png')]
         """, str(sorted(data.extracted.items())))
         # save cropped image to testing folder for manual inspection
-        path = pkg_resources.resource_filename(
-            'yafowil.widget.image', 'testing/crop_size_20_40_offset_5_3.png')
+        path = file_path('crop_size_20_40_offset_5_3.png')
         data.extracted['cropped'].save(path, quality=100)
 
     def test_crop_with_offset_5_0_size_50_20(self):
@@ -907,8 +905,7 @@ class TestImageWidget(YafowilTestCase):
         ('mimetype', 'image/png')]
         """, str(sorted(data.extracted.items())))
         # save cropped image to testing folder for manual inspection
-        path = pkg_resources.resource_filename(
-            'yafowil.widget.image', 'testing/crop_size_50_20_offset_5_0.png')
+        path = file_path('crop_size_50_20_offset_5_0.png')
         data.extracted['cropped'].save(path, quality=100)
 
     def test_extract_crop_fitting_from_lanscape_30_18(self):
@@ -942,8 +939,7 @@ class TestImageWidget(YafowilTestCase):
         ('mimetype', 'image/png')]
         """, str(sorted(data.extracted.items())))
         # save cropped image to testing folder for manual inspection
-        path = pkg_resources.resource_filename(
-            'yafowil.widget.image', 'testing/crop_fitting_ls_30_18.png')
+        path = file_path('crop_fitting_ls_30_18.png')
         data.extracted['cropped'].save(path, quality=100)
 
     def test_extract_crop_fitting_from_landscape_18_30(self):
@@ -977,8 +973,7 @@ class TestImageWidget(YafowilTestCase):
         ('mimetype', 'image/png')]
         """, str(sorted(data.extracted.items())))
         # save cropped image to testing folder for manual inspection
-        path = pkg_resources.resource_filename(
-            'yafowil.widget.image', 'testing/crop_fitting_ls_18_30.png')
+        path = file_path('crop_fitting_ls_18_30.png')
         data.extracted['cropped'].save(path, quality=100)
 
     def test_extract_crop_fitting_from_portrait_30_18(self):
@@ -1012,8 +1007,7 @@ class TestImageWidget(YafowilTestCase):
         ('mimetype', 'image/png')]
         """, str(sorted(data.extracted.items())))
         # save cropped image to testing folder for manual inspection
-        path = pkg_resources.resource_filename(
-            'yafowil.widget.image', 'testing/crop_fitting_pt_30_18.png')
+        path = file_path('crop_fitting_pt_30_18.png')
         data.extracted['cropped'].save(path, quality=100)
 
     def test_extract_crop_fitting_from_portrait_18_30(self):
@@ -1047,8 +1041,7 @@ class TestImageWidget(YafowilTestCase):
         ('mimetype', 'image/png')]
         """, str(sorted(data.extracted.items())))
         # save cropped image to testing folder for manual inspection
-        path = pkg_resources.resource_filename(
-            'yafowil.widget.image', 'testing/crop_fitting_pt_18_30.png')
+        path = file_path('crop_fitting_pt_18_30.png')
         data.extracted['cropped'].save(path, quality=100)
 
     def test_extract_crop_fitting_square(self):
@@ -1077,8 +1070,7 @@ class TestImageWidget(YafowilTestCase):
         ('mimetype', 'image/png')]
         """, str(sorted(data.extracted.items())))
         # save cropped image to testing folder for manual inspection
-        path = pkg_resources.resource_filename(
-            'yafowil.widget.image', 'testing/crop_fitting_sq_30_30.png')
+        path = file_path('crop_fitting_sq_30_30.png')
         data.extracted['cropped'].save(path, quality=100)
 
     def test_extract_crop_fitting_portrait_from_square(self):
@@ -1107,8 +1099,7 @@ class TestImageWidget(YafowilTestCase):
         ('mimetype', 'image/png')]
         """, str(sorted(data.extracted.items())))
         # save cropped image to testing folder for manual inspection
-        path = pkg_resources.resource_filename(
-            'yafowil.widget.image', 'testing/crop_fitting_sq_40_50.png')
+        path = file_path('crop_fitting_sq_40_50.png')
         data.extracted['cropped'].save(path, quality=100)
 
     def test_extract_crop_fitting_lanscape_from_square(self):
@@ -1137,8 +1128,7 @@ class TestImageWidget(YafowilTestCase):
         ('mimetype', 'image/png')]
         """, str(sorted(data.extracted.items())))
         # save cropped image to testing folder for manual inspection
-        path = pkg_resources.resource_filename(
-            'yafowil.widget.image', 'testing/crop_fitting_sq_48_40.png')
+        path = file_path('crop_fitting_sq_48_40.png')
         data.extracted['cropped'].save(path, quality=100)
 
     def test_saving_image_data(self):
