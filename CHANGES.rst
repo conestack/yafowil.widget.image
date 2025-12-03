@@ -48,6 +48,17 @@ Changes
 - Rewrite JavaScript using ES6.
   [rnix]
 
+
+1.7 (2025-11-03)
+----------------
+
+- Pin upper versions of dependencies.
+  [lenadax]
+
+
+1.6 (2022-10-06)
+----------------
+
 - Introduce ``rounddpi`` flag for image blueprint. Pillow, as of version 6.0,
   no longer rounds reported DPI values for BMP, JPEG and PNG images, but image
   manipulation programs may not produce accurate DPI values.
