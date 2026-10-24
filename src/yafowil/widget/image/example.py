@@ -1,13 +1,7 @@
+from io import BytesIO as StringIO
 from node.utils import UNSET
 from yafowil.base import factory
-from yafowil.compat import IS_PY2
 import os
-
-
-if IS_PY2:
-    from StringIO import StringIO
-else:
-    from io import BytesIO as StringIO
 
 
 _runtime_images_dir = None
