@@ -31,10 +31,7 @@ def read_image(name):
 def image_response(url):
     name = 'yafowil.widget.image.image'
     data = read_image(name)
-    return {
-        'body': data,
-        'header': [('Content-Type', 'image/jpg')]
-    }
+    return {'body': data, 'header': [('Content-Type', 'image/jpg')]}
 
 
 def save_image(widget, data):
@@ -123,14 +120,18 @@ def image():
             return image_name
 
     form = factory('fieldset', name=name)
-    form['image'] = factory('#field:image', value=get_value, props={
-        'label': 'Image',
-        'required': 'No Image uploaded',
-        'maxsize': (1024, 768),
-        'scales': {'default': (400, 400)},
-        'src': get_src,
-        'error.class': 'help-block',
-    })
+    form['image'] = factory(
+        '#field:image',
+        value=get_value,
+        props={
+            'label': 'Image',
+            'required': 'No Image uploaded',
+            'maxsize': (1024, 768),
+            'scales': {'default': (400, 400)},
+            'src': get_src,
+            'error.class': 'help-block',
+        },
+    )
     return {
         'widget': form,
         'doc': DOC_IMAGE,
@@ -199,15 +200,20 @@ def image_display():
             return image_name
 
     form = factory('fieldset', name=name)
-    form['image'] = factory('#field:image', value=get_value, mode='display', props={
-        'label': 'Image in display mode',
-        'required': 'No Image uploaded',
-        'maxsize': (1024, 768),
-        'scales': {'default': (400, 400)},
-        'src': get_src,
-        'error.class': 'help-block',
-        'display_class': 'd-block border rounded'
-    })
+    form['image'] = factory(
+        '#field:image',
+        value=get_value,
+        mode='display',
+        props={
+            'label': 'Image in display mode',
+            'required': 'No Image uploaded',
+            'maxsize': (1024, 768),
+            'scales': {'default': (400, 400)},
+            'src': get_src,
+            'error.class': 'help-block',
+            'display_class': 'd-block border rounded',
+        },
+    )
     return {
         'widget': form,
         'doc': DOC_DISPLAY,

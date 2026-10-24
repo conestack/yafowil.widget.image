@@ -1,5 +1,5 @@
-from PIL import Image
 from node.utils import UNSET
+from PIL import Image
 from yafowil.base import ExtractionError
 from yafowil.base import factory
 from yafowil.common import generic_required_extractor
@@ -42,24 +42,24 @@ def image_edit_renderer(widget, data):
 
 @managedprops('accept')
 def mimetype_extractor(widget, data):
-    """XXX: Move relevant parts to ``yafowil.common.mimetype_extractor``.
-    """
+    """XXX: Move relevant parts to ``yafowil.common.mimetype_extractor``."""
     accept = attr_value('accept', widget, data)
     if not data.extracted or not accept:
         return data.extracted
     if not accept.startswith('image'):
-        raise ValueError(u"Incompatible mimetype %s" % accept)
+        raise ValueError('Incompatible mimetype %s' % accept)
     mimetype = data.extracted['mimetype']
     if not mimetype.startswith('image'):
-        message = _('file_not_an_image',
-                    default=u'Uploaded file is not an image.')
+        message = _('file_not_an_image', default='Uploaded file is not an image.')
         raise ExtractionError(message)
     if accept[6:] == '*':
         return data.extracted
     if accept != mimetype:
-        message = _('file_invalid_type',
-                    default=u'Uploaded image not of type ${type}',
-                    mapping={'type': accept[6:]})
+        message = _(
+            'file_invalid_type',
+            default='Uploaded image not of type ${type}',
+            mapping={'type': accept[6:]},
+        )
         raise ExtractionError(message)
     return data.extracted
 
@@ -87,33 +87,38 @@ def size_extractor(widget, data):
         size = data.extracted['image'].size
         if minsize == maxsize:
             if size[0] != minsize[0] or size[1] != minsize[1]:
-                message = _('exact_image_size_required',
-                            default=u'Image must have a size of '
-                                    u'${width} x ${height} pixel',
-                            mapping={
-                                'width': minsize[0],
-                                'height': minsize[1],
-                            })
+                message = _(
+                    'exact_image_size_required',
+                    default='Image must have a size of ${width} x ${height} pixel',
+                    mapping={
+                        'width': minsize[0],
+                        'height': minsize[1],
+                    },
+                )
                 raise ExtractionError(message)
         if minsize:
             if size[0] < minsize[0] or size[1] < minsize[1]:
-                message = _('minimum_image_size_required',
-                            default=u'Image must have a minimum size of '
-                                    u'${width} x ${height} pixel',
-                            mapping={
-                                'width': minsize[0],
-                                'height': minsize[1],
-                            })
+                message = _(
+                    'minimum_image_size_required',
+                    default='Image must have a minimum size of '
+                    '${width} x ${height} pixel',
+                    mapping={
+                        'width': minsize[0],
+                        'height': minsize[1],
+                    },
+                )
                 raise ExtractionError(message)
         if maxsize:
             if size[0] > maxsize[0] or size[1] > maxsize[1]:
-                message = _('maximum_image_size_required',
-                            default=u'Image must have a maximum size of '
-                                    u'${width} x ${height} pixel',
-                            mapping={
-                                'width': maxsize[0],
-                                'height': maxsize[1],
-                            })
+                message = _(
+                    'maximum_image_size_required',
+                    default='Image must have a maximum size of '
+                    '${width} x ${height} pixel',
+                    mapping={
+                        'width': maxsize[0],
+                        'height': maxsize[1],
+                    },
+                )
                 raise ExtractionError(message)
     return data.extracted
 
@@ -131,33 +136,36 @@ def dpi_extractor(widget, data):
             dpi = [round(dpi[0]), round(dpi[1])]
         if mindpi == maxdpi:
             if dpi[0] != mindpi[0] or dpi[1] != mindpi[1]:
-                message = _('exact_image_dpi_required',
-                            default=u'Image must have a resolution of '
-                                    u'${width} x ${height} DPI',
-                            mapping={
-                                'width': mindpi[0],
-                                'height': mindpi[1],
-                            })
+                message = _(
+                    'exact_image_dpi_required',
+                    default='Image must have a resolution of ${width} x ${height} DPI',
+                    mapping={
+                        'width': mindpi[0],
+                        'height': mindpi[1],
+                    },
+                )
                 raise ExtractionError(message)
         if mindpi:
             if dpi[0] < mindpi[0] or dpi[1] < mindpi[1]:
-                message = _('minimum_image_dpi_required',
-                            default=u'Image must have at least '
-                                    u'${width} x ${height} DPI',
-                            mapping={
-                                'width': mindpi[0],
-                                'height': mindpi[1],
-                            })
+                message = _(
+                    'minimum_image_dpi_required',
+                    default='Image must have at least ${width} x ${height} DPI',
+                    mapping={
+                        'width': mindpi[0],
+                        'height': mindpi[1],
+                    },
+                )
                 raise ExtractionError(message)
         if maxdpi:
             if dpi[0] > maxdpi[0] or dpi[1] > maxdpi[1]:
-                message = _('maximum_image_dpi_required',
-                            default=u'Image must have a maximum of '
-                                    u'${width} x ${height} DPI',
-                            mapping={
-                                'width': maxdpi[0],
-                                'height': maxdpi[1],
-                            })
+                message = _(
+                    'maximum_image_dpi_required',
+                    default='Image must have a maximum of ${width} x ${height} DPI',
+                    mapping={
+                        'width': maxdpi[0],
+                        'height': maxdpi[1],
+                    },
+                )
                 raise ExtractionError(message)
     return data.extracted
 
@@ -218,8 +226,7 @@ def crop_extractor(widget, data):
             image_size = scale_size(image.size, (None, size[1]))
             image = image.resize(image_size, Image.Resampling.LANCZOS)
             offset = ((image_size[0] - size[0]) / 2, 0)
-    image = image.crop(
-        (offset[0], offset[1], size[0] + offset[0], size[1] + offset[1]))
+    image = image.crop((offset[0], offset[1], size[0] + offset[0], size[1] + offset[1]))
     data.extracted['cropped'] = image
     return data.extracted
 
@@ -232,7 +239,7 @@ def image_display_renderer(widget, data):
         img_attrs = {
             'src': src,
             'alt': attr_value('alt', widget, data),
-            'class_': attr_value("display_class", widget, data)
+            'class_': attr_value('display_class', widget, data),
         }
         return tag('img', **img_attrs)
     return ''
@@ -248,13 +255,11 @@ factory.register(
         size_extractor,
         dpi_extractor,
         scales_extractor,
-        crop_extractor],
-    edit_renderers=[
-        input_file_edit_renderer,
-        file_options_renderer,
-        image_edit_renderer],
-    display_renderers=[
-        image_display_renderer])
+        crop_extractor,
+    ],
+    edit_renderers=[input_file_edit_renderer, file_options_renderer, image_edit_renderer],
+    display_renderers=[image_display_renderer],
+)
 
 factory.doc['blueprint']['image'] = """\
 Add-on widget `yafowil.widget.image
@@ -270,9 +275,9 @@ factory.defaults['image.error_class'] = 'error'
 factory.defaults['image.message_class'] = 'errormessage'
 
 factory.defaults['image.vocabulary'] = [
-    ('keep', u'Keep Existing image'),
-    ('replace', u'Replace existing image'),
-    ('delete', u'Delete existing image'),
+    ('keep', 'Keep Existing image'),
+    ('replace', 'Replace existing image'),
+    ('delete', 'Delete existing image'),
 ]
 
 factory.defaults['image.radio_class'] = None

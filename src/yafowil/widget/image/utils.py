@@ -3,14 +3,12 @@ from decimal import Decimal
 
 
 def aspect_ratio_approximate(size):
-    """Gets a decimal approximation of an aspect ratio.
-    """
+    """Gets a decimal approximation of an aspect ratio."""
     return Decimal('%.2f' % (float(size[0]) / size[1]))
 
 
 def same_aspect_ratio(size1, size2):
-    """Determines if two sizes have the same aspect ratio.
-    """
+    """Determines if two sizes have the same aspect ratio."""
     return aspect_ratio_approximate(size1) == aspect_ratio_approximate(size2)
 
 
