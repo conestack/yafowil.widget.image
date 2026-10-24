@@ -44,6 +44,7 @@ class TestUtils(unittest.TestCase):
     def test_scale_size(self):
         self.assertEqual(scale_size((640, 480), (800, None)), (800, 600))
         self.assertEqual(scale_size((640, 480), (None, 3)), (4, 3))
+        self.assertEqual(scale_size((640, 480), (None, None)), (640, 480))
 
 
 class TestImageWidget(YafowilTestCase):
@@ -1202,7 +1203,3 @@ class TestImageWidget(YafowilTestCase):
           </div>
         </form>
         """, fxml(form()))
-
-
-if __name__ == '__main__':
-    unittest.main()
