@@ -3,27 +3,19 @@ var yafowil_image = (function (exports, $) {
 
     class ImageWidget {
         static initialize(context) {
-            $('input.image', context).each(function () {
+            $('input.image[type="file"]', context).each(function () {
                 new ImageWidget($(this));
             });
         }
         constructor(elem) {
             elem.data('yafowil-image', this);
             this.elem = elem;
-            $('input.file').on('change', function () {
-                const elem = $(this);
-                if (elem.attr('type') === 'radio') {
-                    return true;
-                }
-                $('input.file[value="replace"]').trigger('click');
-            });
-            $('input.image').on('change', function () {
-                const elem = $(this);
-                if (elem.attr('type') === 'radio') {
-                    return true;
-                }
-                $('input.image[value="replace"]').trigger('click');
-            });
+            this.on_change = this.on_change.bind(this);
+            elem.on('change', this.on_change);
+        }
+        on_change() {
+            const name = `${this.elem.attr('name')}-action`;
+            $(`input[name="${name}"][value="replace"]`, this.elem.parent()).trigger('click');
         }
     }
 

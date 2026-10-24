@@ -4,6 +4,13 @@ Changes
 2.0.1 (unreleased)
 ------------------
 
+- Fix the image widget binding its change handlers to all ``input.file`` and
+  ``input.image`` elements of the document, once per widget and once per
+  action radio. Selecting a file now clicks only the "replace" action of the
+  same widget, also with a custom ``radio_input_class``. Plain ``file``
+  widgets are not handled by the image widget anymore.
+  [rnix]
+
 - Extend the JS tests to 100 % coverage, all modules including bundles are
   loaded by the tests now.
   [rnix]
