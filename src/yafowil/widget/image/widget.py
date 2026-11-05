@@ -26,7 +26,7 @@ def image_edit_renderer(widget, data):
     if not src:
         return data.rendered
     if src.find('?') > -1:
-        src = src + '&amp;nocache=%i' % time.time()
+        src = src + '&nocache=%i' % time.time()
     else:
         src = src + '?nocache=%i' % time.time()
     tag = data.tag

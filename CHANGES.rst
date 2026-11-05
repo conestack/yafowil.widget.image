@@ -4,7 +4,9 @@ Changes
 2.0.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Add ``nocache`` to the preview URL with a plain ``&``, ``yafowil`` encodes
+  attribute values itself as of 4.2.0.
+  [rnix]
 
 
 2.0.1 (2026-10-31)
