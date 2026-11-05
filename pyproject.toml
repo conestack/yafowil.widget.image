@@ -25,7 +25,7 @@ classifiers = [
 ]
 dependencies = [
     "Pillow>=10.0.0",
-    "yafowil>3.99",
+    "yafowil>4.1.99",
 ]
 
 [project.optional-dependencies]
