@@ -1,7 +1,7 @@
 Changes
 =======
 
-2.0.2 (unreleased)
+2.0.2 (2026-11-09)
 ------------------
 
 - Add ``nocache`` to the preview URL with a plain ``&``, ``yafowil`` encodes
